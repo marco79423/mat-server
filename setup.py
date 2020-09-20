@@ -12,7 +12,7 @@ with open(os.path.join(base_dir, 'README.md')) as fp:
 
 setuptools.setup(
     name="mat-server",
-    version='0.1.0',
+    version='0.1.0-alpha1',
     python_requires='>=3.6',
     description='mat server 代理伺服器',
     long_description=long_description,
