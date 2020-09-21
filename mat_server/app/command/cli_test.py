@@ -1,21 +1,31 @@
 import shlex
+from unittest import mock
 
 from click.testing import CliRunner
 
-from .cli import cli
+from .cli import create_cli
 
 
 def test_init():
+    manager = mock.MagicMock()
+
     runner = CliRunner()
+    cli = create_cli(manager)
     result = runner.invoke(cli, shlex.split('init'))
 
     assert result.exit_code == 0
-    assert result.stdout == '初始化 mat 設定\n'
+    manager.create_config.assert_called()
 
 
 def test_serve():
+    manager = mock.MagicMock()
+
     runner = CliRunner()
+    cli = create_cli(manager)
     result = runner.invoke(cli, shlex.split('serve'))
 
     assert result.exit_code == 0
-    assert result.stdout == f'啟動 mat-server 伺服器 (http://0.0.0.0:9527)\n'
+    manager.serve.assert_called_with(
+        host='0.0.0.0',
+        port=9527,
+    )
