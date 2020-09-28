@@ -1,12 +1,15 @@
-import shlex
+from unittest import mock
 
-from click.testing import CliRunner
-
-from .manager import Manager
+from mat_server.app.command.manager import Manager
+from mat_server.app.command.mat_server import MatServerBase
 
 
 def test_create_config(capsys):
-    manager = Manager()
+    mat_server = mock.MagicMock(spec=MatServerBase)
+
+    manager = Manager(
+        mat_server=mat_server,
+    )
 
     manager.create_config()
 
@@ -14,10 +17,16 @@ def test_create_config(capsys):
     assert captured.out == '初始化 mat 設定\n'
 
 
-def test_serve(capsys):
-    manager = Manager()
+def test_serve():
+    mat_server = mock.MagicMock(spec=MatServerBase)
+
+    manager = Manager(
+        mat_server=mat_server,
+    )
 
     manager.serve('0.0.0.0', port=9527)
 
-    captured = capsys.readouterr()
-    assert captured.out == f'啟動 mat-server 伺服器 (http://0.0.0.0:9527)\n'
+    mat_server.serve.assert_called_with(
+        host='0.0.0.0',
+        port=9527,
+    )
