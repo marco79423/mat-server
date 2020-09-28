@@ -1,7 +1,7 @@
 from unittest import mock
 
-from mat_server.app.command.manager import Manager
-from mat_server.app.command.mat_server import MatServerBase
+from mat_server.app.manager import Manager
+from mat_server.app.mat_server import MatServerBase
 
 
 def test_create_config(capsys):

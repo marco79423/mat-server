@@ -1,4 +1,4 @@
-from mat_server.app.command.mat_server import MatServerBase
+from mat_server.app.mat_server import MatServerBase
 
 
 class Manager:

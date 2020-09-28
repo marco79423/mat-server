@@ -1,4 +1,4 @@
-from mat_server.app.command import Container
+from mat_server.app import Container
 
 container = Container()
 cli = container.create_cli()
