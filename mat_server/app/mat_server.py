@@ -1,21 +1,9 @@
-import abc
 from typing import Callable
 
 import flask
 
 
-class MatServerBase(abc.ABC):
-
-    @abc.abstractmethod
-    def get_app(self):
-        pass
-
-    @abc.abstractmethod
-    def serve(self, host: str, port: int):
-        pass
-
-
-class MatServer(MatServerBase):
+class MatServer:
 
     def __init__(self,
                  flask_app: flask.Flask,

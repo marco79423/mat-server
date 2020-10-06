@@ -1,13 +1,13 @@
 from unittest import mock
 
 from mat_server.app.manager import Manager
-from mat_server.app.mat_server import MatServerBase
+from mat_server.app.mat_server import MatServer
 from mat_server.domain import use_cases
 
 
 def test_create_config(capsys):
     generate_default_config_use_case = mock.MagicMock(spec=use_cases.GenerateDefaultConfigUseCase)
-    mat_server = mock.MagicMock(spec=MatServerBase)
+    mat_server = mock.MagicMock(spec=MatServer)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
@@ -23,7 +23,7 @@ def test_create_config(capsys):
 
 def test_serve():
     generate_default_config_use_case = mock.MagicMock(spec=use_cases.GenerateDefaultConfigUseCase)
-    mat_server = mock.MagicMock(spec=MatServerBase)
+    mat_server = mock.MagicMock(spec=MatServer)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
