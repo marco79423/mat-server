@@ -13,6 +13,7 @@ class Manager:
     def create_config(self):
         print('初始化 mat 設定 ...')
         self._generate_default_config_use_case.execute()
+        print('mat-data 資料夾建立完成')
 
     def serve(self, host, port):
         self._mat_server.serve(

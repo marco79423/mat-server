@@ -6,11 +6,22 @@ from mat_server.app.cli import create_cli
 from mat_server.app.manager import Manager
 from mat_server.app.mat_server import MatServer
 from mat_server.domain import use_cases
+from mat_server.infrastructure import helpers
 
 
 class DomainContainer(containers.DeclarativeContainer):
+    DataHelper = providers.Factory(
+        helpers.DataHelper,
+    )
+
+    FileHelper = providers.Factory(
+        helpers.FileHelper,
+    )
+
     GenerateDefaultConfigUseCase = providers.Factory(
-        use_cases.GenerateDefaultConfigUseCase
+        use_cases.GenerateDefaultConfigUseCase,
+        data_helper=DataHelper,
+        file_helper=FileHelper,
     )
 
 

@@ -17,7 +17,7 @@ def test_create_config(capsys):
     manager.create_config()
 
     captured = capsys.readouterr()
-    assert captured.out == '初始化 mat 設定 ...\n'
+    assert captured.out == '初始化 mat 設定 ...\nmat-data 資料夾建立完成\n'
     generate_default_config_use_case.execute.assert_called_once()
 
 
