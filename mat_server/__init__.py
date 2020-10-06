@@ -1,6 +1,6 @@
-from mat_server.app import Container
+from mat_server.app import AppContainer
 
-container = Container()
+container = AppContainer()
 cli = container.create_cli()
 
 if __name__ == '__main__':

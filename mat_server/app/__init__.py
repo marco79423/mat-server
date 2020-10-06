@@ -1,1 +1,1 @@
-from mat_server.app.container import Container
+from mat_server.app.container import AppContainer
