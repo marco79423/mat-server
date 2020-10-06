@@ -1,0 +1,1 @@
+from mat_server.domain.use_cases.generate_default_config_use_case import GenerateDefaultConfigUseCase
