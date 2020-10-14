@@ -17,31 +17,38 @@ HOP_BY_HOP_HEADERS = frozenset(
 class GetProxyServerResponseUseCase(base_types.UseCase):
 
     def __init__(self,
-                 request_helper: helpers.RequestHelperBase):
+                 request_helper: helpers.HTTPRequestHelperBase):
         self._request_helper = request_helper
 
-    def execute(self, request: entities.Request) -> entities.Response:
-        proxy_url = self._get_proxy_host()
+    def execute(self, request: entities.ClientRequest) -> entities.ServerResponse:
+        # 取得 Proxy Server Url
+        proxy_host = self._get_proxy_host()
+        proxy_url = f'{proxy_host}/{request.path}?{request.query_string}'
 
+        # 移除不必要的 Header
         headers = request.headers.copy()
         del headers['host']
 
-        raw_data, status_code, headers = self._request_helper.send(
-            method=request.method,
-            url=f'{proxy_url}/{request.path}?{request.query_string}',
-            headers=headers,
-            raw_body=request.raw_body,
+        # 取得 Proxy Server 的回傳值
+        http_response = self._request_helper.send(
+            entities.HTTPRequest(
+                method=request.method,
+                url=proxy_url,
+                headers=headers,
+                raw_body=request.raw_body,
+            )
         )
 
+        # 將回傳值轉換為 mat Server 的回傳值
         headers = {
             name: value
-            for name, value in headers.items() if name not in HOP_BY_HOP_HEADERS
+            for name, value in http_response.headers.items() if name.lower() not in HOP_BY_HOP_HEADERS
         }
 
-        return entities.Response(
-            raw_data=raw_data,
+        return entities.ServerResponse(
+            raw_data=http_response.raw_data,
             headers=headers,
-            status_code=status_code,
+            status_code=http_response.status_code,
         )
 
     @staticmethod

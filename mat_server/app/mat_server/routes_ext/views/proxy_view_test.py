@@ -24,7 +24,7 @@ def test_return_mock_response(client, container):
     check_if_mock_response_exists_use_case.execute.return_value = True
 
     get_mock_response_use_case = mock.MagicMock(spec=use_cases.GetMockResponseUseCase)
-    get_mock_response_use_case.execute.return_value = entities.Response(
+    get_mock_response_use_case.execute.return_value = entities.ServerResponse(
         raw_data=b'raw_data',
         headers={'name': 'value'},
         status_code=200,
@@ -47,7 +47,7 @@ def test_return_proxy_server_response(client, container):
     get_mock_response_use_case = mock.MagicMock(spec=use_cases.GetMockResponseUseCase)
 
     get_proxy_server_response_use_case = mock.MagicMock(spec=use_cases.GetProxyServerResponseUseCase)
-    get_proxy_server_response_use_case.execute.return_value = entities.Response(
+    get_proxy_server_response_use_case.execute.return_value = entities.ServerResponse(
         raw_data=b'raw_data',
         headers={'name': 'value'},
         status_code=200,

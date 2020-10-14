@@ -21,7 +21,7 @@ class DomainContainer(containers.DeclarativeContainer):
     )
 
     RequestHelper = providers.Singleton(
-        helpers.RequestHelper,
+        helpers.HTTPRequestHelper,
     )
 
     GenerateDefaultConfigUseCase = providers.Singleton(

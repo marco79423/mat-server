@@ -14,8 +14,8 @@ class ProxyView(flask.views.View):
         self._get_mock_response_use_case = get_mock_response_use_case
         self._get_proxy_server_response_use_case = get_proxy_server_response_use_case
 
-    def dispatch_request(self, path):
-        request = entities.Request(
+    def dispatch_request(self, path: str):  # type: ignore
+        request = entities.ClientRequest(
             method=flask.request.method,
             path=path,
             query_string=flask.request.query_string.decode(),
@@ -37,9 +37,9 @@ class ProxyView(flask.views.View):
             return self._transform_response_to_flask_response(proxy_server_response)
 
     @staticmethod
-    def _transform_response_to_flask_response(response: entities.Response):
+    def _transform_response_to_flask_response(response: entities.ServerResponse):
         return flask.Response(
             response=response.raw_data,
             headers=response.headers,
-            status=response.status,
+            status=response.status_code,
         )
