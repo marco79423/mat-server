@@ -8,7 +8,7 @@ from mat_server.app.manager import Manager
 from mat_server.app.mat_server import MatServer, RoutesExt
 from mat_server.app.mat_server.routes_ext import views
 from mat_server.domain import use_cases
-from mat_server.infrastructure import helpers
+from mat_server.infrastructure import helpers, repositories
 
 
 class DomainContainer(containers.DeclarativeContainer):
@@ -22,6 +22,10 @@ class DomainContainer(containers.DeclarativeContainer):
 
     RequestHelper = providers.Singleton(
         helpers.HTTPRequestHelper,
+    )
+
+    ConfigRepository = providers.Singleton(
+        repositories.ConfigRepository,
     )
 
     GenerateDefaultConfigUseCase = providers.Singleton(
@@ -40,6 +44,7 @@ class DomainContainer(containers.DeclarativeContainer):
 
     GetProxyServerResponseUseCase = providers.Singleton(
         use_cases.GetProxyServerResponseUseCase,
+        config_repository=ConfigRepository,
         request_helper=RequestHelper,
     )
 

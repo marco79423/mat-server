@@ -1,4 +1,4 @@
-from mat_server.domain import base_types, entities, helpers
+from mat_server.domain import base_types, entities, helpers, repositories
 
 HOP_BY_HOP_HEADERS = frozenset(
     (
@@ -17,12 +17,14 @@ HOP_BY_HOP_HEADERS = frozenset(
 class GetProxyServerResponseUseCase(base_types.UseCase):
 
     def __init__(self,
+                 config_repository: repositories.ConfigRepositoryBase,
                  request_helper: helpers.HTTPRequestHelperBase):
+        self._config_repository = config_repository
         self._request_helper = request_helper
 
     def execute(self, request: entities.ClientRequest) -> entities.ServerResponse:
         # 取得 Proxy Server Url
-        proxy_host = self._get_proxy_host()
+        proxy_host = self._config_repository.get_proxy_host()
         proxy_url = f'{proxy_host}/{request.path}?{request.query_string}'
 
         # 移除不必要的 Header
@@ -50,7 +52,3 @@ class GetProxyServerResponseUseCase(base_types.UseCase):
             headers=headers,
             status_code=http_response.status_code,
         )
-
-    @staticmethod
-    def _get_proxy_host():
-        return 'https://paji.marco79423.net'

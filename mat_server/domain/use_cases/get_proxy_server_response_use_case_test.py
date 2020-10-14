@@ -1,10 +1,13 @@
 from unittest import mock
 
-from mat_server.domain import entities, helpers
+from mat_server.domain import entities, helpers, repositories
 from mat_server.domain.use_cases import GetProxyServerResponseUseCase
 
 
 def test_get_proxy_server_response():
+    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
+    config_repository.get_proxy_host.return_value = 'https://paji.marco79423.net'
+
     request_helper = mock.MagicMock(spec=helpers.HTTPRequestHelperBase)
     request_helper.send.return_value = entities.HTTPResponse(
         raw_data=b'raw_data',
@@ -16,6 +19,7 @@ def test_get_proxy_server_response():
     )
 
     uc = GetProxyServerResponseUseCase(
+        config_repository=config_repository,
         request_helper=request_helper,
     )
 

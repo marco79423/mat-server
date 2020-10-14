@@ -17,6 +17,11 @@ class Service(abc.ABC):
     pass
 
 
+class Repository(abc.ABC):
+    """領域的儲存庫"""
+    pass
+
+
 class Helper(abc.ABC):
     """工具包"""
     pass
