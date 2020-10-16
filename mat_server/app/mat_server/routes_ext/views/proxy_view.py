@@ -39,7 +39,7 @@ class ProxyView(flask.views.View):
     @staticmethod
     def _transform_response_to_flask_response(response: entities.ServerResponse):
         return flask.Response(
-            response=response.raw_data,
+            response=response.raw_body,
             headers=response.headers,
             status=response.status_code,
         )

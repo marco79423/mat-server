@@ -1,6 +1,3 @@
-from typing import Optional, Dict
-
-from mat_server.domain import base_types
 from mat_server.domain.entities import HTTPResponse
 
 

@@ -19,7 +19,7 @@ def test_create_http_request_with_data():
     assert http_request.raw_body == b'raw_body'
 
 
-def test_create_http_request_with_empty_data():
+def test_create_http_request_without_data():
     http_request = HTTPRequest(
         url='url',
     )

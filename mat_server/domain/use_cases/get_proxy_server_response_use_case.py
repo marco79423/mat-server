@@ -48,7 +48,7 @@ class GetProxyServerResponseUseCase(base_types.UseCase):
         }
 
         return entities.ServerResponse(
-            raw_data=http_response.raw_data,
+            raw_body=http_response.raw_data,
             headers=headers,
             status_code=http_response.status_code,
         )

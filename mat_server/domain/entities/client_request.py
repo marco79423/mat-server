@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 from mat_server.domain import base_types
 
@@ -26,3 +26,17 @@ class ClientRequest(base_types.Entity):
         }
 
         self.raw_body = raw_body
+
+    def __hash__(self):
+        return hash((
+            self.method,
+            self.path,
+            self.query_string,
+            frozenset(self.headers.items()),
+            self.raw_body,
+        ))
+
+    def __eq__(self, other: Any):
+        if not isinstance(other, ClientRequest):
+            return False
+        return hash(self) == hash(other)

@@ -36,10 +36,12 @@ class DomainContainer(containers.DeclarativeContainer):
 
     CheckIfMockResponseExistsUseCase = providers.Singleton(
         use_cases.CheckIfMockResponseExistsUseCase,
+        config_repository=ConfigRepository,
     )
 
     GetMockResponseUseCase = providers.Singleton(
-        use_cases.GetMockResponseUseCase
+        use_cases.GetMockResponseUseCase,
+        config_repository=ConfigRepository,
     )
 
     GetProxyServerResponseUseCase = providers.Singleton(

@@ -15,15 +15,15 @@ class HTTPRequest(base_types.Entity):
         self.headers = headers if headers is not None else {}
         self.raw_body = raw_body
 
+    def __hash__(self):
+        return hash((
+            self.url,
+            self.method,
+            frozenset(self.headers.items()),
+            self.raw_body,
+        ))
+
     def __eq__(self, other: Any):
         if not isinstance(other, HTTPRequest):
             return False
-        if self.url != other.url:
-            return False
-        if self.method != other.method:
-            return False
-        if self.headers != other.headers:
-            return False
-        if self.raw_body != other.raw_body:
-            return False
-        return True
+        return hash(self) == hash(other)

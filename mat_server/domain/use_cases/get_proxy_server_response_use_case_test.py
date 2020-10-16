@@ -36,7 +36,7 @@ def test_get_proxy_server_response():
     )
 
     assert server_response == entities.ServerResponse(
-        raw_data=b'raw_data',
+        raw_body=b'raw_data',
         status_code=200,
         headers={
             'Name': 'name',
