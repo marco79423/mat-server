@@ -4,7 +4,7 @@ from typing import Optional, Dict
 from mat_server.domain import base_types, entities
 
 
-class ConfigRepositoryBase(base_types.Repository):
+class MatConfigRepositoryBase(base_types.Repository):
 
     @abc.abstractmethod
     def get_proxy_host(self) -> str:

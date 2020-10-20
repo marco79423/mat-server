@@ -16,17 +16,17 @@ def test_failed_to_get_route_config():
         raw_body=b'',
     )
 
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.query_route_config.return_value = None
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = None
 
     uc = GetMockResponseUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
     )
 
     with pytest.raises(exceptions.NotFoundError, match='找不到對應的 ConfigRoute'):
         assert uc.execute(client_request)
 
-    config_repository.query_route_config.assert_called_with(
+    mat_config_repository.query_route_config.assert_called_with(
         path=client_request.path,
         method=client_request.method,
         query_string=client_request.query_string,
@@ -50,17 +50,17 @@ def test_get_mock_response_without_file_path_and_raw_data():
         response=entities.RouteResponseConfig(),
     )
 
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.query_route_config.return_value = route_config
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = route_config
 
     uc = GetMockResponseUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
     )
 
     with pytest.raises(exceptions.DataError, match='找不到對應的回傳資料'):
         assert uc.execute(client_request)
 
-    config_repository.query_route_config.assert_called_with(
+    mat_config_repository.query_route_config.assert_called_with(
         path=client_request.path,
         method=client_request.method,
         query_string=client_request.query_string,
@@ -87,17 +87,17 @@ def test_get_mock_response_with_conflict_response_config():
         ),
     )
 
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.query_route_config.return_value = route_config
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = route_config
 
     uc = GetMockResponseUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
     )
 
     with pytest.raises(exceptions.DataError, match='回傳資源衝突'):
         assert uc.execute(client_request)
 
-    config_repository.query_route_config.assert_called_with(
+    mat_config_repository.query_route_config.assert_called_with(
         path=client_request.path,
         method=client_request.method,
         query_string=client_request.query_string,
@@ -123,11 +123,11 @@ def test_get_mock_response():
         ),
     )
 
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.query_route_config.return_value = route_config
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = route_config
 
     uc = GetMockResponseUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
     )
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=route_config.response.raw_data,
@@ -135,7 +135,7 @@ def test_get_mock_response():
         headers={},
     )
 
-    config_repository.query_route_config.assert_called_with(
+    mat_config_repository.query_route_config.assert_called_with(
         path=client_request.path,
         method=client_request.method,
         query_string=client_request.query_string,

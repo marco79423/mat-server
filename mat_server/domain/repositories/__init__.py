@@ -1,1 +1,1 @@
-from mat_server.domain.repositories.config_repository import ConfigRepositoryBase
+from mat_server.domain.repositories.mat_config_repository import MatConfigRepositoryBase

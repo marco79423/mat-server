@@ -24,8 +24,8 @@ class DomainContainer(containers.DeclarativeContainer):
         helpers.HTTPRequestHelper,
     )
 
-    ConfigRepository = providers.Singleton(
-        repositories.ConfigRepository,
+    MatConfigRepository = providers.Singleton(
+        repositories.MatConfigRepository,
     )
 
     GenerateDefaultConfigUseCase = providers.Singleton(
@@ -36,17 +36,17 @@ class DomainContainer(containers.DeclarativeContainer):
 
     CheckIfMockResponseExistsUseCase = providers.Singleton(
         use_cases.CheckIfMockResponseExistsUseCase,
-        config_repository=ConfigRepository,
+        config_repository=MatConfigRepository,
     )
 
     GetMockResponseUseCase = providers.Singleton(
         use_cases.GetMockResponseUseCase,
-        config_repository=ConfigRepository,
+        mat_config_repository=MatConfigRepository,
     )
 
     GetProxyServerResponseUseCase = providers.Singleton(
         use_cases.GetProxyServerResponseUseCase,
-        config_repository=ConfigRepository,
+        mat_config_repository=MatConfigRepository,
         request_helper=RequestHelper,
     )
 

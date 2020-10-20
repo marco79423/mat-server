@@ -4,11 +4,11 @@ from mat_server.domain import base_types, entities, repositories, exceptions
 class GetMockResponseUseCase(base_types.UseCase):
 
     def __init__(self,
-                 config_repository: repositories.ConfigRepositoryBase):
-        self._config_repository = config_repository
+                 mat_config_repository: repositories.MatConfigRepositoryBase):
+        self._mat_config_repository = mat_config_repository
 
     def execute(self, request: entities.ClientRequest) -> entities.ServerResponse:
-        route_config = self._config_repository.query_route_config(
+        route_config = self._mat_config_repository.query_route_config(
             path=request.path,
             method=request.method,
             query_string=request.query_string,

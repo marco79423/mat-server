@@ -5,11 +5,11 @@ from mat_server.domain.use_cases import CheckIfMockResponseExistsUseCase
 
 
 def test_check_mock_response_not_exists():
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.query_route_config.return_value = None
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = None
 
     uc = CheckIfMockResponseExistsUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
     )
 
     assert uc.execute(entities.ClientRequest(
@@ -22,8 +22,8 @@ def test_check_mock_response_not_exists():
 
 
 def test_check_mock_response_exists():
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.query_route_config.return_value = entities.RouteConfig(
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = entities.RouteConfig(
         listen_path='listen_path',
         method='GET',
         status_code=200,
@@ -32,7 +32,7 @@ def test_check_mock_response_exists():
     )
 
     uc = CheckIfMockResponseExistsUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
     )
 
     assert uc.execute(entities.ClientRequest(
@@ -43,7 +43,7 @@ def test_check_mock_response_exists():
         raw_body=b''
     )) is True
 
-    config_repository.query_route_config.assert_called_with(
+    mat_config_repository.query_route_config.assert_called_with(
         path='path',
         method='GET',
         query_string='query_string',

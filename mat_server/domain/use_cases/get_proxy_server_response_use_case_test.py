@@ -5,8 +5,8 @@ from mat_server.domain.use_cases import GetProxyServerResponseUseCase
 
 
 def test_get_proxy_server_response():
-    config_repository = mock.MagicMock(spec=repositories.ConfigRepositoryBase)
-    config_repository.get_proxy_host.return_value = 'https://paji.marco79423.net'
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.get_proxy_host.return_value = 'https://paji.marco79423.net'
 
     request_helper = mock.MagicMock(spec=helpers.HTTPRequestHelperBase)
     request_helper.send.return_value = entities.HTTPResponse(
@@ -19,7 +19,7 @@ def test_get_proxy_server_response():
     )
 
     uc = GetProxyServerResponseUseCase(
-        config_repository=config_repository,
+        mat_config_repository=mat_config_repository,
         request_helper=request_helper,
     )
 
