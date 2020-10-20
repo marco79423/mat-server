@@ -6,7 +6,7 @@ from mat_server.domain import repositories, entities
 
 class MatConfigRepository(repositories.MatConfigRepositoryBase):
 
-    def get_proxy_host(self) -> str:
+    def get_proxy_host(self) -> Optional[str]:
         return 'https://paji.marco79423.net'
 
     def query_route_config(self,

@@ -28,6 +28,11 @@ class DomainContainer(containers.DeclarativeContainer):
         repositories.MatConfigRepository,
     )
 
+    CheckConfigUseCase = providers.Singleton(
+        use_cases.CheckConfigUseCase,
+        mat_config_repository=MatConfigRepository,
+    )
+
     GenerateDefaultConfigUseCase = providers.Singleton(
         use_cases.GenerateDefaultConfigUseCase,
         data_helper=DataHelper,
@@ -78,6 +83,7 @@ class AppContainer(containers.DeclarativeContainer):
     Manager = providers.Factory(
         Manager,
         generate_default_config_use_case=DomainContainer.GenerateDefaultConfigUseCase,
+        check_config_use_case=DomainContainer.CheckConfigUseCase,
         mat_server=MatServer,
     )
 

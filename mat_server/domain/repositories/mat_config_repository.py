@@ -1,5 +1,5 @@
 import abc
-from typing import Optional, Dict
+from typing import Optional
 
 from mat_server.domain import base_types, entities
 
@@ -7,7 +7,7 @@ from mat_server.domain import base_types, entities
 class MatConfigRepositoryBase(base_types.Repository):
 
     @abc.abstractmethod
-    def get_proxy_host(self) -> str:
+    def get_proxy_host(self) -> Optional[str]:
         pass
 
     @abc.abstractmethod

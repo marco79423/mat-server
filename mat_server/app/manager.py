@@ -6,8 +6,10 @@ class Manager:
 
     def __init__(self,
                  generate_default_config_use_case: use_cases.GenerateDefaultConfigUseCase,
+                 check_config_use_case: use_cases.CheckConfigUseCase,
                  mat_server: MatServer):
         self._generate_default_config_use_case = generate_default_config_use_case
+        self._check_config_use_case = check_config_use_case
         self._mat_server = mat_server
 
     def create_config(self):
@@ -17,11 +19,17 @@ class Manager:
 
     def check_config(self):
         print('檢查設定檔 ...')
-        print('設定檔檢查完成 ...')
+        if self._check_config_use_case.execute():
+            print('設定檔檢查完成')
+            return True
+        else:
+            print('設定檔設定錯誤')
+            return False
 
     def serve(self, host, port):
         # 檢查環境
-        self.check_config()
+        if not self.check_config():
+            return
 
         # 啟動伺服器
         self._mat_server.serve(
