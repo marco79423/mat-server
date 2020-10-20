@@ -17,6 +17,17 @@ def test_init():
     manager.create_config.assert_called()
 
 
+def test_check():
+    manager = mock.MagicMock()
+
+    runner = CliRunner()
+    cli = create_cli(manager)
+    result = runner.invoke(cli, shlex.split('check'))
+
+    assert result.exit_code == 0
+    manager.check_config.assert_called()
+
+
 def test_serve():
     manager = mock.MagicMock()
 

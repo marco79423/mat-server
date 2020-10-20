@@ -13,6 +13,10 @@ def create_cli(manager: Manager):
     def init():
         manager.create_config()
 
+    @cli.command('check', short_help='檢查 mat 相關設定')
+    def check():
+        manager.check_config()
+
     @cli.command('serve', short_help='啟動 mat-server 伺服器')
     @click.option('--host', default='0.0.0.0', help='啟動的 host')
     @click.option('-p', '--port', default=9527, help='啟動的 port')

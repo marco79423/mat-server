@@ -21,6 +21,20 @@ def test_create_config(capsys):
     generate_default_config_use_case.execute.assert_called_once()
 
 
+def test_check(capsys):
+    generate_default_config_use_case = mock.MagicMock(spec=use_cases.GenerateDefaultConfigUseCase)
+    mat_server = mock.MagicMock(spec=MatServer)
+
+    manager = Manager(
+        generate_default_config_use_case=generate_default_config_use_case,
+        mat_server=mat_server,
+    )
+
+    manager.check_config()
+    captured = capsys.readouterr()
+    assert captured.out == '檢查設定檔 ...\n設定檔檢查完成 ...\n'
+
+
 def test_serve():
     generate_default_config_use_case = mock.MagicMock(spec=use_cases.GenerateDefaultConfigUseCase)
     mat_server = mock.MagicMock(spec=MatServer)
