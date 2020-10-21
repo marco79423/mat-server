@@ -3,6 +3,15 @@ from unittest import mock
 from mat_server.infrastructure.helpers.file_helper import FileHelper
 
 
+def test_read_yaml():
+    copy_folder_func = mock.MagicMock()
+    file_helper = FileHelper(
+        copy_folder_func=copy_folder_func,
+    )
+
+    assert file_helper.read_yaml('') == {}
+
+
 def test_copy_folder():
     copy_folder_func = mock.MagicMock()
     file_helper = FileHelper(

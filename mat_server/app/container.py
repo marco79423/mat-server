@@ -16,6 +16,10 @@ class DomainContainer(containers.DeclarativeContainer):
         helpers.DataHelper,
     )
 
+    DataRetrieverHelper = providers.Singleton(
+        helpers.DataRetrieverHelper,
+    )
+
     FileHelper = providers.Singleton(
         helpers.FileHelper,
     )
@@ -26,6 +30,8 @@ class DomainContainer(containers.DeclarativeContainer):
 
     MatConfigRepository = providers.Singleton(
         repositories.MatConfigRepository,
+        file_helper=FileHelper,
+        data_retriever_helper=DataRetrieverHelper,
     )
 
     CheckConfigUseCase = providers.Singleton(

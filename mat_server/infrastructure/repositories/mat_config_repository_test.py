@@ -1,14 +1,37 @@
-from mat_server.domain import entities
+from unittest import mock
+
+from mat_server.domain import entities, helpers
 from mat_server.infrastructure.repositories import MatConfigRepository
 
 
 def test_get_proxy_host():
-    mat_config_repository = MatConfigRepository()
+    config_data = {}
+
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    file_helper.read_yaml.return_value = config_data
+
+    data_retriever_helper = mock.MagicMock(spec=helpers.DataRetrieverHelperBase)
+    data_retriever_helper.get_value.return_value = 'https://paji.marco79423.net'
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
     assert mat_config_repository.get_proxy_host() == 'https://paji.marco79423.net'
+
+    file_helper.read_yaml.assert_called_with(MatConfigRepository.CONFIG_FILE_PATH)
+    data_retriever_helper.get_value.assert_called_with(config_data, '.server.proxy_url')
 
 
 def test_query_non_existed_route_config():
-    mat_config_repository = MatConfigRepository()
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    data_retriever_helper = mock.MagicMock(spec=helpers.DataRetrieverHelperBase)
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
+
     assert mat_config_repository.query_route_config(
         path='path',
         method='GET',
@@ -17,7 +40,14 @@ def test_query_non_existed_route_config():
 
 
 def test_query_route_config():
-    mat_config_repository = MatConfigRepository()
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    data_retriever_helper = mock.MagicMock(spec=helpers.DataRetrieverHelperBase)
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
+
     assert mat_config_repository.query_route_config(
         path='path',
         method='GET',
