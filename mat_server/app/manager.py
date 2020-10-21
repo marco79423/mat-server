@@ -19,10 +19,14 @@ class Manager:
 
     def check_config(self):
         print('檢查設定檔 ...')
-        if self._check_config_use_case.execute():
+        validation_report = self._check_config_use_case.execute()
+        if validation_report.passed:
             print('設定檔檢查完成')
             return True
         else:
+            for failed_reason in validation_report.failed_reasons:
+                print(f'[x] {failed_reason}')
+
             print('設定檔設定錯誤')
             return False
 
