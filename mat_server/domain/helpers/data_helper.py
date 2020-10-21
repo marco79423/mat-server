@@ -4,7 +4,7 @@ import pathlib
 from mat_server.domain import base_types
 
 
-class DataHelperBase(base_types.Helper):
+class ProjectDataHelperBase(base_types.Helper):
 
     @abc.abstractmethod
     def get_default_mat_data_path(self) -> pathlib.Path:

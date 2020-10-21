@@ -5,7 +5,7 @@ from mat_server.domain import helpers
 DATA_DIR = pathlib.Path(__file__).resolve().parents[2] / 'data'
 
 
-class DataHelper(helpers.DataHelperBase):
+class ProjectDataHelper(helpers.ProjectDataHelperBase):
 
     def __init__(self,
                  data_dir: pathlib.Path = DATA_DIR):

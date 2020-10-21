@@ -12,8 +12,8 @@ from mat_server.infrastructure import helpers, repositories
 
 
 class DomainContainer(containers.DeclarativeContainer):
-    DataHelper = providers.Singleton(
-        helpers.DataHelper,
+    ProjectDataHelper = providers.Singleton(
+        helpers.ProjectDataHelper,
     )
 
     DataRetrieverHelper = providers.Singleton(
@@ -41,7 +41,7 @@ class DomainContainer(containers.DeclarativeContainer):
 
     GenerateDefaultConfigUseCase = providers.Singleton(
         use_cases.GenerateDefaultConfigUseCase,
-        data_helper=DataHelper,
+        project_data_helper=ProjectDataHelper,
         file_helper=FileHelper,
     )
 
