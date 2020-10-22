@@ -57,7 +57,7 @@ def test_get_mock_response_without_file_path_and_raw_data():
         mat_config_repository=mat_config_repository,
     )
 
-    with pytest.raises(exceptions.DataError, match='找不到對應的回傳資料'):
+    with pytest.raises(exceptions.ValidationError, match='找不到對應的回傳資料'):
         assert uc.execute(client_request)
 
     mat_config_repository.query_route_config.assert_called_with(
@@ -94,7 +94,7 @@ def test_get_mock_response_with_conflict_response_config():
         mat_config_repository=mat_config_repository,
     )
 
-    with pytest.raises(exceptions.DataError, match='回傳資源衝突'):
+    with pytest.raises(exceptions.ValidationError, match='回傳資源衝突'):
         assert uc.execute(client_request)
 
     mat_config_repository.query_route_config.assert_called_with(

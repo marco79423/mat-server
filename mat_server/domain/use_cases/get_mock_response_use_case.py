@@ -18,10 +18,10 @@ class GetMockResponseUseCase(base_types.UseCase):
             raise exceptions.NotFoundError('找不到對應的 ConfigRoute')
 
         if route_config.response.file_path is None and route_config.response.raw_data is None:
-            raise exceptions.DataError('找不到對應的回傳資料')
+            raise exceptions.ValidationError('找不到對應的回傳資料')
 
         if route_config.response.file_path and route_config.response.raw_data:
-            raise exceptions.DataError('回傳資源衝突')
+            raise exceptions.ValidationError('回傳資源衝突')
 
         if route_config.response.raw_data:
             return entities.ServerResponse(
