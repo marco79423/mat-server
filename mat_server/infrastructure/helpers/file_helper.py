@@ -12,7 +12,11 @@ class FileHelper(helpers.FileHelperBase):
 
     def read_yaml(self, target_path: str) -> Any:
         """讀取 yaml 檔案"""
-        return {}
+        return {
+            'server': {
+                'proxy_url': 'https://marco79423.net',
+            }
+        }
 
     def copy_folder(self, src_path: str, dest_path: str):
         """複製資料夾 (支援遞迴複製)"""

@@ -10,3 +10,6 @@ waitress==1.4.4
 
 # network
 requests==2.24.0
+
+# parser
+lark-parser[regex]

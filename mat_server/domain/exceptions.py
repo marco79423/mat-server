@@ -13,3 +13,7 @@ class NotFoundError(BaseError):
 
 class DataError(BaseError):
     pass
+
+
+class ValidationError(BaseError):
+    pass

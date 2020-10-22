@@ -9,7 +9,11 @@ def test_read_yaml():
         copy_folder_func=copy_folder_func,
     )
 
-    assert file_helper.read_yaml('') == {}
+    assert file_helper.read_yaml('') == {
+        'server': {
+            'proxy_url': 'https://marco79423.net',
+        }
+    }
 
 
 def test_copy_folder():
