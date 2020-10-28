@@ -47,7 +47,7 @@ class DomainContainer(containers.DeclarativeContainer):
 
     CheckIfMockResponseExistsUseCase = providers.Singleton(
         use_cases.CheckIfMockResponseExistsUseCase,
-        config_repository=MatConfigRepository,
+        mat_config_repository=MatConfigRepository,
     )
 
     GetMockResponseUseCase = providers.Singleton(
