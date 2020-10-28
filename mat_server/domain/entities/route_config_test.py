@@ -4,18 +4,18 @@ from mat_server.domain.entities import RouteResponseConfig, RouteConfig
 def test_create_route_response_config_with_data():
     route_response_config = RouteResponseConfig(
         file_path='file_path',
-        raw_data=b'raw_data'
+        data='data'
     )
 
     assert route_response_config.file_path == 'file_path'
-    assert route_response_config.raw_data == b'raw_data'
+    assert route_response_config.data == 'data'
 
 
 def test_create_route_response_config_without_data():
     route_response_config = RouteResponseConfig()
 
     assert route_response_config.file_path is None
-    assert route_response_config.raw_data is None
+    assert route_response_config.data is None
 
 
 def test_compare_route_response_config_in_different_type():
@@ -30,11 +30,11 @@ def test_compare_route_response_config_in_different_file_path():
     )
 
 
-def test_compare_route_response_config_in_different_raw_data():
+def test_compare_route_response_config_in_different_data():
     assert RouteResponseConfig(
-        raw_data=b'raw_data',
+        data='data',
     ) != RouteResponseConfig(
-        raw_data=b'raw_data2',
+        data='data2',
     )
 
 

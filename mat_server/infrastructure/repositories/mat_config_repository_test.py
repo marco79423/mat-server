@@ -156,7 +156,7 @@ def test_query_route_config():
             'name': ['大類']
         },
         response=entities.RouteResponseConfig(
-            raw_data='哈囉 廢物'.encode(),
+            data='哈囉 廢物',
             file_path='file_path'
         )
     )

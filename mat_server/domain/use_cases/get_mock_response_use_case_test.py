@@ -83,7 +83,7 @@ def test_get_mock_response_with_conflict_response_config():
         query=urllib.parse.parse_qs(client_request.query_string),
         response=entities.RouteResponseConfig(
             file_path='file_path',
-            raw_data=b'raw_data',
+            data=b'raw_data',
         ),
     )
 
@@ -119,7 +119,7 @@ def test_get_mock_response():
         status_code=200,
         query=urllib.parse.parse_qs(client_request.query_string),
         response=entities.RouteResponseConfig(
-            raw_data=b'raw_data'
+            data='data'
         ),
     )
 
@@ -130,7 +130,7 @@ def test_get_mock_response():
         mat_config_repository=mat_config_repository,
     )
     assert uc.execute(client_request) == entities.ServerResponse(
-        raw_body=route_config.response.raw_data,
+        raw_body=route_config.response.data.encode(),
         status_code=route_config.status_code,
         headers={},
     )

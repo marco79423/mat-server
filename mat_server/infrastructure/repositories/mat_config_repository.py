@@ -47,14 +47,13 @@ class MatConfigRepository(repositories.MatConfigRepositoryBase):
                     if isinstance(values, str):
                         query[key] = [values]
 
-            response_data = self._data_retriever_helper.get_value(route, '.response.data')
             route_configs.append(entities.RouteConfig(
                 listen_path=self._data_retriever_helper.get_value(route, '.listen_path'),
                 method=self._data_retriever_helper.get_value(route, '.method', 'GET'),
                 status_code=self._data_retriever_helper.get_value(route, '.status_code', 200),
                 query=query,
                 response=entities.RouteResponseConfig(
-                    raw_data=response_data.encode() if response_data else None,
+                    data=self._data_retriever_helper.get_value(route, '.response.data'),
                     file_path=self._data_retriever_helper.get_value(route, '.response.file_path'),
                 )
             ))

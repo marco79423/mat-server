@@ -7,14 +7,14 @@ from mat_server.domain import base_types
 class RouteResponseConfig(base_types.Entity):
     def __init__(self,
                  file_path: Optional[str] = None,
-                 raw_data: Optional[bytes] = None):
+                 data: Optional[str] = None):
         self.file_path = file_path
-        self.raw_data = raw_data
+        self.data = data
 
     def __hash__(self):
         return hash((
             self.file_path,
-            self.raw_data,
+            self.data,
         ))
 
     def __eq__(self, other):
