@@ -1,6 +1,7 @@
 from unittest import mock
 
 from mat_server.domain import entities, helpers
+from mat_server.infrastructure.helpers import DataRetrieverHelper
 from mat_server.infrastructure.repositories import MatConfigRepository
 
 
@@ -39,9 +40,104 @@ def test_query_non_existed_route_config():
     ) is None
 
 
+def test_query_route_config_without_matching_path():
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    file_helper.read_yaml.return_value = {
+        'routes': [
+            {
+                'listen_path': 'different_path',
+                'method': 'GET',
+            }
+        ]
+    }
+
+    data_retriever_helper = DataRetrieverHelper()
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
+
+    assert mat_config_repository.query_route_config(
+        path='path',
+        method='GET',
+        query_string='name=大類',
+    ) is None
+
+
+def test_query_route_config_without_matching_method():
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    file_helper.read_yaml.return_value = {
+        'routes': [
+            {
+                'listen_path': 'path',
+                'method': 'POST',
+            }
+        ]
+    }
+
+    data_retriever_helper = DataRetrieverHelper()
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
+
+    assert mat_config_repository.query_route_config(
+        path='path',
+        method='GET',
+        query_string='name=大類',
+    ) is None
+
+
+def test_query_route_config_without_matching_query_params():
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    file_helper.read_yaml.return_value = {
+        'routes': [
+            {
+                'listen_path': 'path',
+                'method': 'GET',
+                'query': {
+                    'name': '垃圾'
+                }
+            }
+        ]
+    }
+
+    data_retriever_helper = DataRetrieverHelper()
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
+
+    assert mat_config_repository.query_route_config(
+        path='path',
+        method='GET',
+        query_string='name=大類',
+    ) is None
+
+
 def test_query_route_config():
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
-    data_retriever_helper = mock.MagicMock(spec=helpers.DataRetrieverHelperBase)
+    file_helper.read_yaml.return_value = {
+        'routes': [
+            {
+                'listen_path': 'path',
+                'method': 'GET',
+                'status_code': 200,
+                'query': {
+                    'name': '大類',
+                },
+                'response': {
+                    'data': '哈囉 廢物',
+                    'file_path': 'file_path',
+                }
+            }
+        ]
+    }
+
+    data_retriever_helper = DataRetrieverHelper()
 
     mat_config_repository = MatConfigRepository(
         file_helper=file_helper,
@@ -61,5 +157,6 @@ def test_query_route_config():
         },
         response=entities.RouteResponseConfig(
             raw_data='哈囉 廢物'.encode(),
+            file_path='file_path'
         )
     )

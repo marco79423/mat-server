@@ -3,7 +3,7 @@ import requests
 from mat_server.domain import helpers, entities
 
 
-class HTTPRequestHelper(helpers.HTTPRequestHelperBase):
+class HTTPRequestHelper(helpers.HTTPRequestHelperBase):  # pragma: no cover
 
     def __init__(self):
         self._session = requests.Session()

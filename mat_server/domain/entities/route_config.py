@@ -1,3 +1,4 @@
+import urllib.parse
 from typing import Dict, Optional, List
 
 from mat_server.domain import base_types
@@ -34,6 +35,14 @@ class RouteConfig(base_types.Entity):
         self.status_code = status_code
         self.query = query
         self.response = response
+
+    def check_if_query_string_matches_config(self, query_string: str) -> bool:
+        if self.query:
+            query_params = urllib.parse.parse_qs(query_string)
+            for key, values in self.query.items():
+                if set(values) != set(query_params.get(key, [])):
+                    return False
+        return True
 
     def __hash__(self):
         return hash((

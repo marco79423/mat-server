@@ -11,8 +11,19 @@ def test_read_yaml():
 
     assert file_helper.read_yaml('') == {
         'server': {
-            'proxy_url': 'https://marco79423.net',
-        }
+            'proxy_url': 'https://paji.marco79423.net',
+        },
+        'routes': [
+            {
+                'listen_path': 'demo/hello',
+                'query': {
+                    'name': '大類',
+                },
+                'response': {
+                    'data': '哈囉 廢物'
+                }
+            }
+        ]
     }
 
 

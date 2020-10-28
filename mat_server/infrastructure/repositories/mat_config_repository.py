@@ -5,7 +5,6 @@ from mat_server.domain import repositories, entities, helpers
 
 
 class MatConfigRepository(repositories.MatConfigRepositoryBase):
-
     CONFIG_DIR_PATH = './mat-data'
     CONFIG_FILE_PATH = './mat-data/config.yml'
 
@@ -23,17 +22,41 @@ class MatConfigRepository(repositories.MatConfigRepositoryBase):
                            path: str,
                            method: str,
                            query_string: str) -> Optional[entities.RouteConfig]:
+        route_configs = self.get_all_route_configs()
+        for route_config in route_configs:
+            if route_config.listen_path != path:
+                continue
 
-        query_params = urllib.parse.parse_qs(query_string)
-        if set(query_params.get('name', [])) == {'大類'}:
-            return entities.RouteConfig(
-                listen_path=path,
-                method=method,
-                status_code=200,
-                query=query_params,
-                response=entities.RouteResponseConfig(
-                    raw_data='哈囉 廢物'.encode(),
-                )
-            )
+            if route_config.method != method:
+                continue
 
+            if not route_config.check_if_query_string_matches_config(query_string):
+                continue
+
+            return route_config
         return None
+
+    def get_all_route_configs(self):
+        data = self._file_helper.read_yaml(self.CONFIG_FILE_PATH)
+
+        route_configs = []
+        for route in self._data_retriever_helper.get_value(data, '.routes'):
+            query = route.get('query')
+            if query:
+                for key, values in query.items():
+                    if isinstance(values, str):
+                        query[key] = [values]
+
+            response_data = self._data_retriever_helper.get_value(route, '.response.data')
+            route_configs.append(entities.RouteConfig(
+                listen_path=self._data_retriever_helper.get_value(route, '.listen_path'),
+                method=self._data_retriever_helper.get_value(route, '.method', 'GET'),
+                status_code=self._data_retriever_helper.get_value(route, '.status_code', 200),
+                query=query,
+                response=entities.RouteResponseConfig(
+                    raw_data=response_data.encode() if response_data else None,
+                    file_path=self._data_retriever_helper.get_value(route, '.response.file_path'),
+                )
+            ))
+
+        return route_configs

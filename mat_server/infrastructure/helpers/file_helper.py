@@ -14,8 +14,19 @@ class FileHelper(helpers.FileHelperBase):
         """讀取 yaml 檔案"""
         return {
             'server': {
-                'proxy_url': 'https://marco79423.net',
-            }
+                'proxy_url': 'https://paji.marco79423.net',
+            },
+            'routes': [
+                {
+                    'listen_path': 'demo/hello',
+                    'query': {
+                        'name': '大類',
+                    },
+                    'response': {
+                        'data': '哈囉 廢物'
+                    }
+                }
+            ]
         }
 
     def copy_folder(self, src_path: str, dest_path: str):
