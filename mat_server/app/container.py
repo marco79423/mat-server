@@ -1,5 +1,9 @@
+import codecs
+import shutil
+
 import flask
 import waitress
+import yaml
 from dependency_injector import containers, providers
 from dependency_injector.ext import flask as di_flask
 
@@ -22,6 +26,9 @@ class DomainContainer(containers.DeclarativeContainer):
 
     FileHelper = providers.Singleton(
         helpers.FileHelper,
+        codecs_module=providers.Object(codecs),
+        shutil_module=providers.Object(shutil),
+        yaml_module=providers.Object(yaml),
     )
 
     RequestHelper = providers.Singleton(
