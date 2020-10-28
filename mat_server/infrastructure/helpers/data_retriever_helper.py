@@ -66,11 +66,12 @@ class DataRetrieverHelper(helpers.DataRetrieverHelperBase):
     def __init__(self):
         self._grammar_parser = lark.Lark(self.RETRIEVER_GRAMMAR, start='generate_retrieve_func')
 
-    def get_value(self, data: Any, path: str) -> Any:
+    def get_value(self, data: Any, path: str, default: Any = None) -> Any:
         try:
             parser = self._grammar_parser.parse(path)
         except lark.exceptions.LarkError as e:
             raise exceptions.ValidationError('path 文法錯誤') from e
 
         retrieve_func = self.Transformer().transform(parser)
-        return retrieve_func(data)
+        value = retrieve_func(data)
+        return value if value is not None else default
