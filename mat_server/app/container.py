@@ -1,4 +1,5 @@
 import codecs
+import os
 import shutil
 
 import flask
@@ -26,6 +27,7 @@ class DomainContainer(containers.DeclarativeContainer):
 
     FileHelper = providers.Singleton(
         helpers.FileHelper,
+        os_module=providers.Object(os),
         codecs_module=providers.Object(codecs),
         shutil_module=providers.Object(shutil),
         yaml_module=providers.Object(yaml),
@@ -60,6 +62,7 @@ class DomainContainer(containers.DeclarativeContainer):
     GetMockResponseUseCase = providers.Singleton(
         use_cases.GetMockResponseUseCase,
         mat_config_repository=MatConfigRepository,
+        file_helper=FileHelper,
     )
 
     GetProxyServerResponseUseCase = providers.Singleton(
