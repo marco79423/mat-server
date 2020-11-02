@@ -1,5 +1,9 @@
 # mat 代理伺服器
 
+![mat-server](./logo.png)
+
+## 說明
+
 後端開發用代理伺服器，能攔截設定的 API，直接回傳指定的結果，其餘則直接轉發實際伺服器的回傳值。
 
    客戶端 -> mat server -> 實際的伺服器
@@ -107,31 +111,25 @@ routes:
     setup.py
     requirements.txt
     mat_server/
+        __init__.py                             # 程式進入點
         app/                                    # 應用層
-            command/
-                __init__.py
-                container.py
-                main.py
-            server/
-              __init__.py
-              container.py
-              extensions/
-                flask_routes/
-                    proxy.py
-                    info.py
-        domain/                                 # 領域層
-            use_cases/                          # 用例
-                create_mat_data_use_case.py
-                parse_mat_data_use_case.py
-                proxy_target_route_use_case.py
-                return_mat_data_use_case.py
+            container.py                        # DI container
+            cli.py                              # 命令列設定
+            manager.py                          # 功能管理
+            mat_server/                         # 服務器設定
                 ...
-            entities/
-                config.py
-                route.py
-            helpers/
-                yaml_helper.py
-                
+        domain/                                 # 領域層
+            use_cases/                          # 領域的用例
+                ...
+            entities/                           # 領域的實例
+                ...
+            repositories/                       # 領域的儲存庫
+                ...
+            helpers/                            # 工具包
+                ...
         infrastrcture/                          # 實作層
+            repositories/
+                ...
             helpers/
-                yaml_helper.py
+                ...
+        data/                                   # 放置靜態檔案 (如預設設定檔)
