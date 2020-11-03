@@ -1,15 +1,14 @@
-import requests
-
 from mat_server.domain import helpers, entities
 
 
-class HTTPRequestHelper(helpers.HTTPRequestHelperBase):  # pragma: no cover
+class HTTPRequestHelper(helpers.HTTPRequestHelperBase):
 
-    def __init__(self):
-        self._session = requests.Session()
+    def __init__(self, requests_module):
+        self._requests_module = requests_module
+        self._session = self._requests_module.Session()
 
     def send(self, request: entities.HTTPRequest) -> entities.HTTPResponse:
-        req = requests.Request(
+        req = self._requests_module.Request(
             method=request.method,
             url=request.url,
             headers=request.headers,

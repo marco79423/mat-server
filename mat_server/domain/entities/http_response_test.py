@@ -15,3 +15,61 @@ def test_create_http_response():
     assert http_response.headers == {
         'name': 'name',
     }
+
+
+def test_compare_different_type():
+    assert HTTPResponse(
+        raw_data=b'raw_data',
+        status_code=200,
+        headers={
+            'name': 'name',
+        }
+    ) != ''
+
+
+def test_compare_different_raw_data():
+    assert HTTPResponse(
+        raw_data=b'raw_data',
+        status_code=200,
+        headers={
+            'name': 'name',
+        }
+    ) != HTTPResponse(
+        raw_data=b'raw_data2',
+        status_code=200,
+        headers={
+            'name': 'name',
+        }
+    )
+
+
+def test_compare_different_status_code():
+    assert HTTPResponse(
+        raw_data=b'raw_data',
+        status_code=200,
+        headers={
+            'name': 'name',
+        }
+    ) != HTTPResponse(
+        raw_data=b'raw_data',
+        status_code=400,
+        headers={
+            'name': 'name',
+        }
+    )
+
+
+def test_compare_different_headers():
+    assert HTTPResponse(
+        raw_data=b'raw_data',
+        status_code=200,
+        headers={
+            'name': 'name',
+        }
+    ) != HTTPResponse(
+        raw_data=b'raw_data',
+        status_code=200,
+        headers={
+            'name': 'name2',
+        }
+    )

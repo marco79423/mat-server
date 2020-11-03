@@ -3,6 +3,7 @@ import os
 import shutil
 
 import flask
+import requests
 import waitress
 import yaml
 from dependency_injector import containers, providers
@@ -35,6 +36,7 @@ class DomainContainer(containers.DeclarativeContainer):
 
     RequestHelper = providers.Singleton(
         helpers.HTTPRequestHelper,
+        requests_module=providers.Object(requests),
     )
 
     MatConfigRepository = providers.Singleton(
