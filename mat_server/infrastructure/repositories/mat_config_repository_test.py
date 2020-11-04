@@ -5,6 +5,40 @@ from mat_server.infrastructure.helpers import DataRetrieverHelper
 from mat_server.infrastructure.repositories import MatConfigRepository
 
 
+def test_get_config():
+    config_data = {
+        'server': {
+            'proxy_url': 'proxy_url'
+        },
+        'routes': [
+            {
+                'listen_path': 'listen_path',
+                'method': 'GET',
+                'status_code': 200,
+                'query': {
+                    'key': ['value'],
+                },
+                'response': {
+                    'file_path': 'file_path',
+                    'data': 'data',
+                }
+            }
+        ]
+    }
+
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    file_helper.read_yaml.return_value = config_data
+
+    data_retriever_helper = DataRetrieverHelper()
+
+    mat_config_repository = MatConfigRepository(
+        file_helper=file_helper,
+        data_retriever_helper=data_retriever_helper,
+    )
+
+    assert mat_config_repository.get_config().serialize() == config_data
+
+
 def test_get_proxy_host():
     config_data = {}
 

@@ -61,6 +61,11 @@ class DomainContainer(containers.DeclarativeContainer):
         mat_config_repository=MatConfigRepository,
     )
 
+    GetConfigUseCase = providers.Singleton(
+        use_cases.GetConfigUseCase,
+        mat_config_repository=MatConfigRepository,
+    )
+
     GetMockResponseUseCase = providers.Singleton(
         use_cases.GetMockResponseUseCase,
         mat_config_repository=MatConfigRepository,
@@ -79,6 +84,11 @@ class AppContainer(containers.DeclarativeContainer):
 
     FlaskApp = providers.Singleton(flask.Flask, __name__)
 
+    GetConfigView = di_flask.ClassBasedView(
+        views.GetConfigView,
+        get_config_use_case=DomainContainer.GetConfigUseCase,
+    )
+
     ProxyView = di_flask.ClassBasedView(
         views.ProxyView,
         check_if_mock_response_exists_use_case=DomainContainer.CheckIfMockResponseExistsUseCase,
@@ -88,6 +98,7 @@ class AppContainer(containers.DeclarativeContainer):
 
     RoutesExt = providers.Singleton(
         RoutesExt,
+        get_config_view_class=GetConfigView.provider,
         proxy_view_class=ProxyView.provider,
     )
 

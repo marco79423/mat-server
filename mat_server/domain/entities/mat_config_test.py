@@ -1,4 +1,4 @@
-from mat_server.domain.entities import RouteResponseConfig, RouteConfig
+from mat_server.domain.entities import RouteResponseConfig, RouteConfig, ServerConfig, MatConfig
 
 
 def test_create_route_response_config_with_data():
@@ -169,4 +169,157 @@ def test_compare_route_config_in_different_response():
         response=RouteResponseConfig(
             file_path='file_path'
         ),
+    )
+
+
+def test_create_server_config():
+    server_config = ServerConfig(
+        proxy_url='proxy_url'
+    )
+
+    assert server_config.proxy_url == 'proxy_url'
+
+
+def test_compare_server_config_in_different_type():
+    assert ServerConfig(
+        proxy_url='proxy_url'
+    ) != ''
+
+
+def test_compare_server_config_in_different_proxy_url():
+    assert ServerConfig(
+        proxy_url='proxy_url'
+    ) != ServerConfig(
+        proxy_url='proxy_url2'
+    )
+
+
+def test_create_mat_config():
+    server_config = ServerConfig(
+        proxy_url='proxy_url',
+    )
+
+    route_configs = [
+        RouteConfig(
+            listen_path='listen_path',
+            method='GET',
+            status_code=200,
+            query={
+                'key': ['value']
+            },
+            response=RouteResponseConfig(
+                file_path='file_path',
+                data='data',
+            )
+        )
+    ]
+
+    mat_config = MatConfig(
+        server=server_config,
+        routes=route_configs
+    )
+
+    assert mat_config.server == server_config
+    assert mat_config.routes == route_configs
+
+
+def test_compare_mat_config_in_different_type():
+    assert MatConfig(
+        server=ServerConfig(
+            proxy_url='proxy_url',
+        ),
+        routes=[
+            RouteConfig(
+                listen_path='listen_path',
+                method='GET',
+                status_code=200,
+                query={
+                    'key': ['value']
+                },
+                response=RouteResponseConfig(
+                    file_path='file_path',
+                    data='data',
+                )
+            )
+        ],
+    ) != ''
+
+
+def test_compare_mat_config_in_different_server():
+    assert MatConfig(
+        server=ServerConfig(
+            proxy_url='proxy_url',
+        ),
+        routes=[
+            RouteConfig(
+                listen_path='listen_path',
+                method='GET',
+                status_code=200,
+                query={
+                    'key': ['value']
+                },
+                response=RouteResponseConfig(
+                    file_path='file_path',
+                    data='data',
+                )
+            )
+        ],
+    ) != MatConfig(
+        server=ServerConfig(
+            proxy_url='proxy_url2',
+        ),
+        routes=[
+            RouteConfig(
+                listen_path='listen_path',
+                method='GET',
+                status_code=200,
+                query={
+                    'key': ['value']
+                },
+                response=RouteResponseConfig(
+                    file_path='file_path',
+                    data='data',
+                )
+            )
+        ],
+    )
+
+
+def test_compare_mat_config_in_different_routes():
+    assert MatConfig(
+        server=ServerConfig(
+            proxy_url='proxy_url',
+        ),
+        routes=[
+            RouteConfig(
+                listen_path='listen_path',
+                method='GET',
+                status_code=200,
+                query={
+                    'key': ['value']
+                },
+                response=RouteResponseConfig(
+                    file_path='file_path',
+                    data='data',
+                )
+            )
+        ],
+    ) != MatConfig(
+        server=ServerConfig(
+            proxy_url='proxy_url',
+        ),
+        routes=[
+            RouteConfig(
+                listen_path='listen_path2',
+                method='GET',
+                status_code=200,
+                query={
+                    'key': ['value']
+                },
+                response=RouteResponseConfig(
+                    file_path='file_path',
+                    data='data',
+                )
+            )
+        ],
     )

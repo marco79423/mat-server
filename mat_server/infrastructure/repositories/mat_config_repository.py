@@ -1,4 +1,3 @@
-import urllib.parse
 from typing import Optional
 
 from mat_server.domain import repositories, entities, helpers
@@ -13,6 +12,14 @@ class MatConfigRepository(repositories.MatConfigRepositoryBase):
                  data_retriever_helper: helpers.DataRetrieverHelperBase):
         self._file_helper = file_helper
         self._data_retriever_helper = data_retriever_helper
+
+    def get_config(self) -> entities.MatConfig:
+        return entities.MatConfig(
+            server=entities.ServerConfig(
+                proxy_url=self.get_proxy_host(),
+            ),
+            routes=self.get_all_route_configs(),
+        )
 
     def get_proxy_host(self) -> Optional[str]:
         data = self._file_helper.read_yaml(self.CONFIG_FILE_PATH)
