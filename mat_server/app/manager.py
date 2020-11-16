@@ -1,4 +1,4 @@
-from mat_server.app.mat_server import MatServer
+from mat_server.app.server import Server
 from mat_server.domain import use_cases
 
 
@@ -7,10 +7,10 @@ class Manager:
     def __init__(self,
                  generate_default_config_use_case: use_cases.GenerateDefaultConfigUseCase,
                  check_config_use_case: use_cases.CheckConfigUseCase,
-                 mat_server: MatServer):
+                 server: Server):
         self._generate_default_config_use_case = generate_default_config_use_case
         self._check_config_use_case = check_config_use_case
-        self._mat_server = mat_server
+        self._server = server
 
     def create_config(self):
         print('初始化 mat 設定 ...')
@@ -36,7 +36,7 @@ class Manager:
             return
 
         # 啟動伺服器
-        self._mat_server.serve(
+        self._server.serve(
             host=host,
             port=port,
         )

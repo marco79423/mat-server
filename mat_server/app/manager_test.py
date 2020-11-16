@@ -1,19 +1,19 @@
 from unittest import mock
 
 from mat_server.app.manager import Manager
-from mat_server.app.mat_server import MatServer
+from mat_server.app.server import Server
 from mat_server.domain import use_cases, entities
 
 
 def test_create_config(capsys):
     generate_default_config_use_case = mock.MagicMock(spec=use_cases.GenerateDefaultConfigUseCase)
     check_config_use_case = mock.MagicMock(spec=use_cases.CheckConfigUseCase)
-    mat_server = mock.MagicMock(spec=MatServer)
+    server = mock.MagicMock(spec=Server)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
         check_config_use_case=check_config_use_case,
-        mat_server=mat_server,
+        server=server,
     )
 
     manager.create_config()
@@ -31,12 +31,12 @@ def test_check_failed(capsys):
         failed_reasons=['必須要有 proxy host 設定']
     )
 
-    mat_server = mock.MagicMock(spec=MatServer)
+    server = mock.MagicMock(spec=Server)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
         check_config_use_case=check_config_use_case,
-        mat_server=mat_server,
+        server=server,
     )
 
     assert manager.check_config() is False
@@ -53,12 +53,12 @@ def test_check_success(capsys):
     check_config_use_case = mock.MagicMock(spec=use_cases.CheckConfigUseCase)
     check_config_use_case.execute.return_value = entities.ValidationReport()
 
-    mat_server = mock.MagicMock(spec=MatServer)
+    server = mock.MagicMock(spec=Server)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
         check_config_use_case=check_config_use_case,
-        mat_server=mat_server,
+        server=server,
     )
 
     manager.check_config()
@@ -77,12 +77,12 @@ def test_serve_failed(capsys):
         failed_reasons=['必須要有 proxy host 設定']
     )
 
-    mat_server = mock.MagicMock(spec=MatServer)
+    server = mock.MagicMock(spec=Server)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
         check_config_use_case=check_config_use_case,
-        mat_server=mat_server,
+        server=server,
     )
 
     manager.serve('0.0.0.0', port=9527)
@@ -99,19 +99,19 @@ def test_serve():
     check_config_use_case = mock.MagicMock(spec=use_cases.CheckConfigUseCase)
     check_config_use_case.execute.return_value = entities.ValidationReport()
 
-    mat_server = mock.MagicMock(spec=MatServer)
+    server = mock.MagicMock(spec=Server)
 
     manager = Manager(
         generate_default_config_use_case=generate_default_config_use_case,
         check_config_use_case=check_config_use_case,
-        mat_server=mat_server,
+        server=server,
     )
 
     manager.serve('0.0.0.0', port=9527)
 
     check_config_use_case.execute.assert_called_once()
 
-    mat_server.serve.assert_called_with(
+    server.serve.assert_called_with(
         host='0.0.0.0',
         port=9527,
     )

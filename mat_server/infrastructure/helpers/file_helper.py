@@ -1,5 +1,5 @@
-import os
-from typing import Any, List
+from typing import Any
+import mimetypes
 
 from mat_server.domain import helpers
 
@@ -10,18 +10,24 @@ class FileHelper(helpers.FileHelperBase):
                  os_module,
                  codecs_module,
                  shutil_module,
+                 mimetypes_module,
                  yaml_module):
         self._os_module = os_module
         self._codecs_module = codecs_module
         self._shutil_module = shutil_module
+        self._mimetypes_module = mimetypes_module
         self._yaml_module = yaml_module
 
     def join_file_paths(self, *paths: str) -> str:
         return self._os_module.path.join(*paths)
 
+    def guess_file_type(self, path: str) -> str:
+        """猜測檔案類型"""
+        return self._mimetypes_module.guess_type(path)[0] or 'application/octet-stream'
+
     def read_bytes(self, target_path: str) -> bytes:
         """讀取檔案資料"""
-        with self._codecs_module.open(target_path, 'r') as fp:
+        with self._codecs_module.open(target_path, 'rb') as fp:
             return fp.read()
 
     def read_yaml(self, target_path: str) -> Any:

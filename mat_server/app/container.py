@@ -1,18 +1,16 @@
 import codecs
+import mimetypes
 import os
 import shutil
 
-import flask
 import requests
-import waitress
+import uvicorn  # type: ignore
 import yaml
 from dependency_injector import containers, providers
-from dependency_injector.ext import flask as di_flask
 
 from mat_server.app.cli import create_cli
 from mat_server.app.manager import Manager
-from mat_server.app.mat_server import MatServer, RoutesExt
-from mat_server.app.mat_server.routes_ext import views
+from mat_server.app.server import Server
 from mat_server.domain import use_cases
 from mat_server.infrastructure import helpers, repositories
 
@@ -31,6 +29,7 @@ class DomainContainer(containers.DeclarativeContainer):
         os_module=providers.Object(os),
         codecs_module=providers.Object(codecs),
         shutil_module=providers.Object(shutil),
+        mimetypes_module=providers.Object(mimetypes),
         yaml_module=providers.Object(yaml),
     )
 
@@ -82,38 +81,20 @@ class DomainContainer(containers.DeclarativeContainer):
 class AppContainer(containers.DeclarativeContainer):
     DomainContainer = providers.Container(DomainContainer)
 
-    FlaskApp = providers.Singleton(flask.Flask, __name__)
-
-    GetConfigView = di_flask.ClassBasedView(
-        views.GetConfigView,
+    Server = providers.Factory(
+        Server,
         get_config_use_case=DomainContainer.GetConfigUseCase,
-    )
-
-    ProxyView = di_flask.ClassBasedView(
-        views.ProxyView,
         check_if_mock_response_exists_use_case=DomainContainer.CheckIfMockResponseExistsUseCase,
         get_mock_response_use_case=DomainContainer.GetMockResponseUseCase,
         get_proxy_server_response_use_case=DomainContainer.GetProxyServerResponseUseCase,
-    )
-
-    RoutesExt = providers.Singleton(
-        RoutesExt,
-        get_config_view_class=GetConfigView.provider,
-        proxy_view_class=ProxyView.provider,
-    )
-
-    MatServer = providers.Singleton(
-        MatServer,
-        flask_app=FlaskApp,
-        routes_ext=RoutesExt,
-        wsgi_application_prod_serve_func=waitress.serve,
+        server_serve_func=uvicorn.run,
     )
 
     Manager = providers.Factory(
         Manager,
         generate_default_config_use_case=DomainContainer.GenerateDefaultConfigUseCase,
         check_config_use_case=DomainContainer.CheckConfigUseCase,
-        mat_server=MatServer,
+        server=Server,
     )
 
     create_cli = providers.Callable(

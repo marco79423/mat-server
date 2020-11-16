@@ -25,9 +25,15 @@ class GetMockResponseUseCase(base_types.UseCase):
             raise exceptions.ValidationError('回傳資源衝突')
 
         elif route_config.response.data:
+            # 預設直接猜測 json
+            headers = {
+                'Content-Type': 'application/json',
+            }
+
             return entities.ServerResponse(
                 raw_body=route_config.response.data.encode(),
                 status_code=route_config.status_code,
+                headers=headers,
             )
 
         elif route_config.response.file_path:
@@ -35,9 +41,15 @@ class GetMockResponseUseCase(base_types.UseCase):
                 'mat-data',
                 route_config.response.file_path,
             )
+
+            headers = {
+                'Content-Type': self._file_helper.guess_file_type(response_file_path),
+            }
+
             return entities.ServerResponse(
                 raw_body=self._file_helper.read_bytes(response_file_path),
                 status_code=route_config.status_code,
+                headers=headers,
             )
 
         else:

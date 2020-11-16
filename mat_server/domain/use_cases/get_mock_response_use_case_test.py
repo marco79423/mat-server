@@ -130,6 +130,7 @@ def test_get_mock_response_using_response_data():
     )
 
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
 
@@ -140,7 +141,9 @@ def test_get_mock_response_using_response_data():
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=route_config.response.data.encode(),
         status_code=route_config.status_code,
-        headers={},
+        headers={
+            'Content-Type': 'application/json',
+        },
     )
 
     mat_config_repository.query_route_config.assert_called_with(
@@ -174,6 +177,7 @@ def test_get_mock_response_using_response_file_path():
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     file_helper.join_file_paths.return_value = 'joined_file_path'
     file_helper.read_bytes.return_value = data
+    file_helper.guess_file_type.return_value = 'application/json'
 
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
@@ -185,7 +189,9 @@ def test_get_mock_response_using_response_file_path():
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=data,
         status_code=route_config.status_code,
-        headers={},
+        headers={
+            'Content-Type': 'application/json',
+        },
     )
 
     mat_config_repository.query_route_config.assert_called_with(
@@ -196,3 +202,4 @@ def test_get_mock_response_using_response_file_path():
 
     file_helper.join_file_paths.assert_called_with('mat-data', 'file_path')
     file_helper.read_bytes.assert_called_with('joined_file_path')
+    file_helper.guess_file_type.assert_called_with('joined_file_path')

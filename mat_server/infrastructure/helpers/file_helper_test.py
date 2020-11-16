@@ -9,12 +9,14 @@ def test_join_file_paths():
 
     codecs_module = mock.MagicMock()
     shutil_module = mock.MagicMock()
+    mimetypes_module = mock.MagicMock()
     yaml_module = mock.MagicMock()
 
     file_helper = FileHelper(
         os_module=os_module,
         codecs_module=codecs_module,
         shutil_module=shutil_module,
+        mimetypes_module=mimetypes_module,
         yaml_module=yaml_module,
     )
     assert file_helper.join_file_paths('path1', 'path2') == os_module.path.join.return_value
@@ -32,18 +34,20 @@ def test_read_bytes():
     codecs_module.open.return_value.__enter__.return_value = fp
 
     shutil_module = mock.MagicMock()
+    mimetypes_module = mock.MagicMock()
     yaml_module = mock.MagicMock()
 
     file_helper = FileHelper(
         os_module=os_module,
         codecs_module=codecs_module,
         shutil_module=shutil_module,
+        mimetypes_module=mimetypes_module,
         yaml_module=yaml_module,
     )
 
     assert file_helper.read_bytes('target_path') == data
 
-    codecs_module.open.assert_called_with('target_path', 'r')
+    codecs_module.open.assert_called_with('target_path', 'rb')
     fp.read.assert_called_once()
 
 
@@ -71,6 +75,7 @@ def test_read_yaml():
     codecs_module.open.return_value.__enter__.return_value = fp
 
     shutil_module = mock.MagicMock()
+    mimetypes_module = mock.MagicMock()
 
     yaml_module = mock.MagicMock()
     yaml_module.safe_load.return_value = data
@@ -79,6 +84,7 @@ def test_read_yaml():
         os_module=os_module,
         codecs_module=codecs_module,
         shutil_module=shutil_module,
+        mimetypes_module=mimetypes_module,
         yaml_module=yaml_module,
     )
 
@@ -92,12 +98,14 @@ def test_copy_folder():
     os_module = mock.MagicMock()
     codecs_module = mock.MagicMock()
     shutil_module = mock.MagicMock()
+    mimetypes_module = mock.MagicMock()
     yaml_module = mock.MagicMock()
 
     file_helper = FileHelper(
         os_module=os_module,
         codecs_module=codecs_module,
         shutil_module=shutil_module,
+        mimetypes_module=mimetypes_module,
         yaml_module=yaml_module,
     )
 
