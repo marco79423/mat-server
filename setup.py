@@ -30,7 +30,7 @@ setuptools.setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'mat = mat_server:cli'
+            'mat = mat_server.__main__:cli'
         ]
     },
     classifiers=[
