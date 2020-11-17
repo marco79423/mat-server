@@ -30,13 +30,16 @@ class Manager:
             print('設定檔設定錯誤')
             return False
 
+    def get_server_api_router(self):
+        return self._server.get_api_router()
+
     def serve(self, host, port):
         # 檢查環境
         if not self.check_config():
             return
 
         # 啟動伺服器
-        self._server.serve(
+        self._server.run(
             host=host,
             port=port,
         )
