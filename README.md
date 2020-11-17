@@ -2,8 +2,6 @@
 
 ![mat-server](./logo.png)
 
-## 說明
-
 後端開發用代理伺服器，能攔截設定的 API，直接回傳指定的結果，其餘則直接轉發實際伺服器的回傳值。
 
    客戶端 -> mat server -> 實際的伺服器
@@ -27,7 +25,7 @@ pip install mat-server
 
 ## 使用方法
 
-### 操作
+### 命令列操作
 
 ```shell
 
@@ -38,14 +36,18 @@ mat init
 mat -p 3000
 ```
 
-### mat-data 資料夾
+### 設定檔相關
+
+產生的 `mat-data` 資料夾架構如下：
 
     mat-data/
         config.yml               # 設定要代理的伺服器等設定
         data/
             hello.json
 
-### config.yml
+mat-server 會直接使用當前目錄下的 `mat-data/config.yml` 設定檔，只有這個是固定的，其他的回傳值內容都可以自由設定，比如說只要指定好路徑， `data/hello.json` 其實也可以放在 `mat-data` 外面。
+
+其中 `config.yml` 的格式如下：
 
 ```yaml
 server:
@@ -64,9 +66,7 @@ routes:
       file_path: data/hello.json # 回傳 hello.json 的檔案內容
 ```
 
-### 範例
-
-直接透過 config.yml 設定路由和回傳值
+範例 1： 直接透過 config.yml 設定路由和回傳值
 
 ```yaml
 server:
@@ -79,11 +79,39 @@ routes:
           content: 歡迎使用 mat-server
 ```
 
+##  進階用法
+
+### 當作函式庫使用
+
+mat 內部使用 FastAPI 當作 Server。
+
+```python
+import fastapi
+import uvicorn
+import mat_server
+
+app = fastapi.FastAPI()
+
+# 實作自己的路由
+@app.get('/hello')
+async def hello():
+    return 'hello'
+
+
+# 取得 mat_server 所使用的 API Router
+manager = mat_server.manager
+api_router = manager.get_server_api_router()
+app.include_router(api_router)
+
+# 啟動服務器
+uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)
+```
+
 ### 特殊路由
 
-#### /_mat
+### GET `/_mat`
 
-回傳設定檔的內容
+回傳設定檔的內容 
 
 ```json
 {
@@ -122,7 +150,9 @@ routes:
 * 會根據副檔名來猜測型態，比如說 `xxx.jpg` 就會是 `image/jpeg`
 * 如果沒有副檔名或是猜不到，就會當成網頁型態 `text/html; charset=utf-8`
 
-## 專案架構
+## 實作相關
+
+### 專案架構
 
     setup.py
     requirements.txt
