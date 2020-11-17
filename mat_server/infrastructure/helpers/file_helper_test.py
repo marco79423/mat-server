@@ -23,6 +23,25 @@ def test_join_file_paths():
     os_module.path.join.assert_called_with('path1', 'path2')
 
 
+def test_guess_file_type():
+    os_module = mock.MagicMock()
+    codecs_module = mock.MagicMock()
+    shutil_module = mock.MagicMock()
+    mimetypes_module = mock.MagicMock()
+    mimetypes_module.guess_type.return_value = ('type_type', None)
+    yaml_module = mock.MagicMock()
+
+    file_helper = FileHelper(
+        os_module=os_module,
+        codecs_module=codecs_module,
+        shutil_module=shutil_module,
+        mimetypes_module=mimetypes_module,
+        yaml_module=yaml_module,
+    )
+    assert file_helper.guess_file_type('file_path') == 'type_type'
+    mimetypes_module.guess_type.assert_called_with('file_path')
+
+
 def test_read_bytes():
     data = 'bytes'
 
