@@ -1,3 +1,4 @@
+import json
 import urllib.parse
 from unittest import mock
 
@@ -110,7 +111,7 @@ def test_get_mock_response_with_conflict_response_config():
     )
 
 
-def test_get_mock_response_using_response_data():
+def test_get_mock_response_using_response_data_with_html_type():
     client_request = entities.ClientRequest(
         method='GET',
         path='path',
@@ -140,6 +141,51 @@ def test_get_mock_response_using_response_data():
     )
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=route_config.response.data.encode(),
+        status_code=route_config.status_code,
+        headers={
+            'Content-Type': 'text/html; charset=utf-8',
+        },
+    )
+
+    mat_config_repository.query_route_config.assert_called_with(
+        path=client_request.path,
+        method=client_request.method,
+        query_string=client_request.query_string,
+    )
+
+
+def test_get_mock_response_using_response_data_with_json_type():
+    client_request = entities.ClientRequest(
+        method='GET',
+        path='path',
+        query_string='name=name',
+        headers={},
+        raw_body=b'',
+    )
+
+    route_config = entities.RouteConfig(
+        listen_path=client_request.path,
+        method=client_request.method,
+        status_code=200,
+        query=urllib.parse.parse_qs(client_request.query_string),
+        response=entities.RouteResponseConfig(
+            data={
+                'msg': 'data',
+            }
+        ),
+    )
+
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = route_config
+
+    uc = GetMockResponseUseCase(
+        file_helper=file_helper,
+        mat_config_repository=mat_config_repository,
+    )
+    assert uc.execute(client_request) == entities.ServerResponse(
+        raw_body=json.dumps(route_config.response.data).encode(),
         status_code=route_config.status_code,
         headers={
             'Content-Type': 'application/json',

@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Any
 
 from mat_server.domain import base_types
 
@@ -7,7 +7,7 @@ from mat_server.domain import base_types
 class RouteResponseConfig(base_types.Entity):
     def __init__(self,
                  file_path: Optional[str] = None,
-                 data: Optional[str] = None):
+                 data: Optional[Any] = None):
         self.file_path = file_path
         self.data = data
 
