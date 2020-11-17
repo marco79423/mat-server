@@ -23,7 +23,7 @@ class FileHelper(helpers.FileHelperBase):
 
     def guess_file_type(self, path: str) -> str:
         """猜測檔案類型"""
-        return self._mimetypes_module.guess_type(path)[0] or 'application/octet-stream'
+        return self._mimetypes_module.guess_type(path)[0]
 
     def read_bytes(self, target_path: str) -> bytes:
         """讀取檔案資料"""

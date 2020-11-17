@@ -111,12 +111,13 @@ routes:
     setup.py
     requirements.txt
     mat_server/
-        __init__.py                             # 程式進入點
+        __init__.py                             # 函試庫進入點
+        __main__.py                             # 主程式進入點
         app/                                    # 應用層
             container.py                        # DI container
             cli.py                              # 命令列設定
             manager.py                          # 功能管理
-            mat_server/                         # 服務器設定
+            server.py                           # 服務器設定
                 ...
         domain/                                 # 領域層
             use_cases/                          # 領域的用例

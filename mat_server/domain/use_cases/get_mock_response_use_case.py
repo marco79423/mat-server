@@ -42,8 +42,12 @@ class GetMockResponseUseCase(base_types.UseCase):
                 route_config.response.file_path,
             )
 
+            file_type = self._file_helper.guess_file_type(response_file_path)
+            if file_type is None:
+                file_type = 'text/html; charset=utf-8'
+
             headers = {
-                'Content-Type': self._file_helper.guess_file_type(response_file_path),
+                'Content-Type': file_type,
             }
 
             return entities.ServerResponse(
