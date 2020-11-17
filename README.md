@@ -106,6 +106,22 @@ routes:
 }
 ```
 
+## FAO
+
+### 決定回傳 Content-Type 的策略？
+
+如果是回傳 mock 資料，會根據設定檔的設定決定 `Content-Type`，使用 `file_path` 或是用 `data` 會有不同的策略。
+
+使用 `data` 的情況：
+
+* 如果 `data` 是字串，就會直接當成網頁型態 (`text/html; charset=utf-8`)
+* 除此之外都當作 JSON 型態 (`application/json`)
+
+使用 `file_path` 的情況：
+
+* 會根據副檔名來猜測型態，比如說 `xxx.jpg` 就會是 `image/jpeg`
+* 如果沒有副檔名或是猜不到，就會當成網頁型態 `text/html; charset=utf-8`
+
 ## 專案架構
 
     setup.py
