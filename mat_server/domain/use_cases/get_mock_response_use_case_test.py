@@ -17,13 +17,15 @@ def test_failed_to_get_route_config():
         raw_body=b'',
     )
 
-    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = None
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
-        file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        file_helper=file_helper,
+        json_helper=json_helper,
     )
 
     with pytest.raises(exceptions.NotFoundError, match='找不到對應的 ConfigRoute'):
@@ -53,13 +55,15 @@ def test_get_mock_response_without_file_path_and_raw_data():
         response=entities.RouteResponseConfig(),
     )
 
-    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
-        file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        file_helper=file_helper,
+        json_helper=json_helper,
     )
 
     with pytest.raises(exceptions.ValidationError, match='找不到對應的回傳資料'):
@@ -92,13 +96,15 @@ def test_get_mock_response_with_conflict_response_config():
         ),
     )
 
-    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
-        file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        file_helper=file_helper,
+        json_helper=json_helper,
     )
 
     with pytest.raises(exceptions.ValidationError, match='回傳資源衝突'):
@@ -130,14 +136,16 @@ def test_get_mock_response_using_response_data_with_html_type():
         ),
     )
 
-    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
-
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
+
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
         file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        json_helper=json_helper,
     )
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=route_config.response.data.encode(),
@@ -175,17 +183,20 @@ def test_get_mock_response_using_response_data_with_json_type():
         ),
     )
 
-    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
-
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
 
+    file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
+    json_helper.serialize.return_value = json.dumps(route_config.response.data)
+
     uc = GetMockResponseUseCase(
-        file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        file_helper=file_helper,
+        json_helper=json_helper,
     )
     assert uc.execute(client_request) == entities.ServerResponse(
-        raw_body=json.dumps(route_config.response.data).encode(),
+        raw_body=json_helper.serialize.return_value.encode(),
         status_code=route_config.status_code,
         headers={
             'Content-Type': 'application/json',
@@ -220,17 +231,20 @@ def test_get_mock_response_using_response_file_path_with_unknown_file_type():
         ),
     )
 
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = route_config
+
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     file_helper.join_file_paths.return_value = 'joined_file_path'
     file_helper.read_bytes.return_value = data
     file_helper.guess_file_type.return_value = None
 
-    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
-    mat_config_repository.query_route_config.return_value = route_config
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
-        file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        file_helper=file_helper,
+        json_helper=json_helper,
     )
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=data,
@@ -272,17 +286,20 @@ def test_get_mock_response_using_response_file_path():
         ),
     )
 
+    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
+    mat_config_repository.query_route_config.return_value = route_config
+
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     file_helper.join_file_paths.return_value = 'joined_file_path'
     file_helper.read_bytes.return_value = data
     file_helper.guess_file_type.return_value = 'application/json'
 
-    mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
-    mat_config_repository.query_route_config.return_value = route_config
+    json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
-        file_helper=file_helper,
         mat_config_repository=mat_config_repository,
+        file_helper=file_helper,
+        json_helper=json_helper,
     )
     assert uc.execute(client_request) == entities.ServerResponse(
         raw_body=data,

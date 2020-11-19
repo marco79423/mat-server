@@ -1,4 +1,5 @@
 import codecs
+import json
 import mimetypes
 import os
 import shutil
@@ -38,6 +39,11 @@ class DomainContainer(containers.DeclarativeContainer):
         requests_module=providers.Object(requests),
     )
 
+    JSONHelper = providers.Singleton(
+        helpers.JSONHelper,
+        json_module=providers.Object(json),
+    )
+
     MatConfigRepository = providers.Singleton(
         repositories.MatConfigRepository,
         file_helper=FileHelper,
@@ -69,6 +75,7 @@ class DomainContainer(containers.DeclarativeContainer):
         use_cases.GetMockResponseUseCase,
         mat_config_repository=MatConfigRepository,
         file_helper=FileHelper,
+        json_helper=JSONHelper,
     )
 
     GetProxyServerResponseUseCase = providers.Singleton(

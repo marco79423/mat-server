@@ -79,6 +79,22 @@ routes:
           content: 歡迎使用 mat-server
 ```
 
+範例 2： 自動取代變數
+
+```yaml
+server:
+  proxy_url: https://marco79423.net
+routes:
+  - listen_path: backend/api/articles/
+    response:
+      replace_funcs:
+        - uuid_v4                          # 看見 {uuid_v4} 就會取代為 UUID v4 回傳
+      data:
+        - requestID: {uuid_v4}
+          title: Hello mat-server
+          content: 歡迎使用 mat-server
+```
+
 ##  進階用法
 
 ### 當作函式庫使用

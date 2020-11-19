@@ -1,4 +1,5 @@
-import json
+import uuid
+from typing import List
 
 from mat_server.domain import base_types, entities, repositories, exceptions, helpers
 
@@ -7,9 +8,11 @@ class GetMockResponseUseCase(base_types.UseCase):
 
     def __init__(self,
                  mat_config_repository: repositories.MatConfigRepositoryBase,
-                 file_helper: helpers.FileHelperBase):
+                 file_helper: helpers.FileHelperBase,
+                 json_helper: helpers.JSONHelperBase):
         self._mat_config_repository = mat_config_repository
         self._file_helper = file_helper
+        self._json_helper = json_helper
 
     def execute(self, request: entities.ClientRequest) -> entities.ServerResponse:
         route_config = self._mat_config_repository.query_route_config(
@@ -21,38 +24,50 @@ class GetMockResponseUseCase(base_types.UseCase):
         if route_config is None:
             raise exceptions.NotFoundError('找不到對應的 ConfigRoute')
 
-        if route_config.response.file_path and route_config.response.data:
+        response_config = route_config.response
+
+        if response_config.file_path and response_config.data:
             raise exceptions.ValidationError('回傳資源衝突')
 
-        if route_config.response.data:
-            file_type = self._guess_data_file(route_config.response)
+        if response_config.data:
+            file_type = self._guess_data_file(response_config)
 
             # 如果是 json
             if file_type == 'application/json':
-                raw_body = json.dumps(route_config.response.data).encode()
+                data = self._json_helper.serialize(response_config.data)
             # 其餘直接編碼
             else:
-                raw_body = route_config.response.data.encode()
+                data = response_config.data
+
+            if response_config.replace_funcs:
+                data = self._transform_data(data, response_config.replace_funcs)
+
+            return entities.ServerResponse(
+                raw_body=data.encode(),
+                status_code=route_config.status_code,
+                headers={
+                    'Content-Type': self._guess_data_file(response_config),
+                },
+            )
+
+        elif response_config.file_path:
+            response_file_path = self._file_helper.join_file_paths(
+                'mat-data',
+                response_config.file_path,
+            )
+
+            file_type = self._guess_data_file(response_config)
+            raw_body = self._file_helper.read_bytes(response_file_path)
+
+            if response_config.replace_funcs:
+                data = raw_body.decode()
+                raw_body = self._transform_data(data, response_config.replace_funcs).encode()
 
             return entities.ServerResponse(
                 raw_body=raw_body,
                 status_code=route_config.status_code,
                 headers={
-                    'Content-Type': self._guess_data_file(route_config.response),
-                },
-            )
-
-        elif route_config.response.file_path:
-            response_file_path = self._file_helper.join_file_paths(
-                'mat-data',
-                route_config.response.file_path,
-            )
-
-            return entities.ServerResponse(
-                raw_body=self._file_helper.read_bytes(response_file_path),
-                status_code=route_config.status_code,
-                headers={
-                    'Content-Type': self._guess_data_file(route_config.response),
+                    'Content-Type': file_type,
                 },
             )
 
@@ -80,3 +95,15 @@ class GetMockResponseUseCase(base_types.UseCase):
             return file_type
         else:  # pragma: no cover
             raise exceptions.ValidationError('資訊不足，無法猜測資料型態')
+
+    def _transform_data(self, data: str, replace_funcs: List) -> str:
+        for replace_func in replace_funcs:
+            if replace_func == 'uuid_v4':
+                data = self._transform_for_uuid_v4_replace_func(data)
+        return data
+
+    @staticmethod
+    def _transform_for_uuid_v4_replace_func(data: str) -> str:
+        for _ in range(data.count('{uuid_v4}')):
+            data = data.replace('{uuid_v4}', str(uuid.uuid4()), 1)
+        return data

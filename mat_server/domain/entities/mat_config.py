@@ -1,13 +1,15 @@
 import urllib.parse
-from typing import Dict, Optional, List, Any
+from typing import Dict, Optional, List, Any, Union
 
 from mat_server.domain import base_types
 
 
 class RouteResponseConfig(base_types.Entity):
     def __init__(self,
+                 replace_funcs: Optional[List[str]] = None,
                  file_path: Optional[str] = None,
-                 data: Optional[Any] = None):
+                 data: Any = None):
+        self.replace_funcs = replace_funcs
         self.file_path = file_path
         self.data = data
 
@@ -17,7 +19,9 @@ class RouteResponseConfig(base_types.Entity):
         return self.serialize() == other.serialize()
 
     def serialize(self) -> dict:
-        result = {}
+        result: Dict[str, Union[None, List[str], str]] = {}
+        if self.replace_funcs:
+            result['replace_funcs'] = self.replace_funcs
         if self.file_path:
             result['file_path'] = self.file_path
         if self.data:
@@ -51,7 +55,7 @@ class RouteConfig(base_types.Entity):
             return False
         return self.serialize() == other.serialize()
 
-    def serialize(self) -> dict:
+    def serialize(self) -> Any:
         return {
             'listen_path': self.listen_path,
             'method': self.method,
@@ -65,7 +69,7 @@ class ServerConfig(base_types.Entity):
     def __init__(self, proxy_url: Optional[str]):
         self.proxy_url = proxy_url
 
-    def serialize(self) -> dict:
+    def serialize(self) -> Any:
         return {
             'proxy_url': self.proxy_url,
         }
@@ -81,7 +85,7 @@ class MatConfig(base_types.Entity):
         self.server = server
         self.routes = routes
 
-    def serialize(self) -> dict:
+    def serialize(self) -> Any:
         return {
             'server': self.server.serialize(),
             'routes': [route.serialize() for route in self.routes],

@@ -1,5 +1,6 @@
 # general
 dependency-injector==3.44.0
+aiostream==0.4.1
 
 # command
 click==7.1.2
@@ -14,3 +15,6 @@ requests==2.24.0
 # parser
 PyYAML==5.3.1
 lark-parser[regex]
+
+# database
+pymongo==3.11.0

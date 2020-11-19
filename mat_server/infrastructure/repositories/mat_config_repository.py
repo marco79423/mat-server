@@ -60,6 +60,7 @@ class MatConfigRepository(repositories.MatConfigRepositoryBase):
                 status_code=self._data_retriever_helper.get_value(route, '.status_code', 200),
                 query=query,
                 response=entities.RouteResponseConfig(
+                    replace_funcs=self._data_retriever_helper.get_value(route, '.response.replace_funcs'),
                     data=self._data_retriever_helper.get_value(route, '.response.data'),
                     file_path=self._data_retriever_helper.get_value(route, '.response.file_path'),
                 )

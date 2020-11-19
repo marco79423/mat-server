@@ -3,10 +3,14 @@ from mat_server.domain.entities import RouteResponseConfig, RouteConfig, ServerC
 
 def test_create_route_response_config_with_data():
     route_response_config = RouteResponseConfig(
+        replace_funcs=[
+            'uuid_v4',
+        ],
         file_path='file_path',
         data='data'
     )
 
+    assert route_response_config.replace_funcs == ['uuid_v4']
     assert route_response_config.file_path == 'file_path'
     assert route_response_config.data == 'data'
 
@@ -14,12 +18,20 @@ def test_create_route_response_config_with_data():
 def test_create_route_response_config_without_data():
     route_response_config = RouteResponseConfig()
 
+    assert route_response_config.replace_funcs is None
     assert route_response_config.file_path is None
     assert route_response_config.data is None
 
 
 def test_compare_route_response_config_in_different_type():
     assert RouteResponseConfig() != ''
+
+
+def test_compare_route_response_config_in_different_replace_funcs():
+    assert RouteResponseConfig(
+        replace_funcs=['uuid_v4'],
+    ) != RouteResponseConfig(
+    )
 
 
 def test_compare_route_response_config_in_different_file_path():
