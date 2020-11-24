@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 
-from mat_server.domain import entities, repositories, exceptions, helpers
+from mat_server.domain import entities, repositories, exceptions, helpers, services
 from mat_server.domain.use_cases import GetMockResponseUseCase
 
 
@@ -17,12 +17,14 @@ def test_failed_to_get_route_config():
         raw_body=b'',
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = None
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         mat_config_repository=mat_config_repository,
         file_helper=file_helper,
         json_helper=json_helper,
@@ -55,12 +57,14 @@ def test_get_mock_response_without_file_path_and_raw_data():
         response=entities.RouteResponseConfig(),
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         mat_config_repository=mat_config_repository,
         file_helper=file_helper,
         json_helper=json_helper,
@@ -96,12 +100,14 @@ def test_get_mock_response_with_conflict_response_config():
         ),
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
     file_helper = mock.MagicMock(spec=helpers.FileHelperBase)
     json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         mat_config_repository=mat_config_repository,
         file_helper=file_helper,
         json_helper=json_helper,
@@ -136,6 +142,8 @@ def test_get_mock_response_using_response_data_with_html_type():
         ),
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
+
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
 
@@ -143,6 +151,7 @@ def test_get_mock_response_using_response_data_with_html_type():
     json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         file_helper=file_helper,
         mat_config_repository=mat_config_repository,
         json_helper=json_helper,
@@ -183,6 +192,8 @@ def test_get_mock_response_using_response_data_with_json_type():
         ),
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
+
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
 
@@ -191,6 +202,7 @@ def test_get_mock_response_using_response_data_with_json_type():
     json_helper.serialize.return_value = json.dumps(route_config.response.data)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         mat_config_repository=mat_config_repository,
         file_helper=file_helper,
         json_helper=json_helper,
@@ -231,6 +243,8 @@ def test_get_mock_response_using_response_file_path_with_unknown_file_type():
         ),
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
+
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
 
@@ -242,6 +256,7 @@ def test_get_mock_response_using_response_file_path_with_unknown_file_type():
     json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         mat_config_repository=mat_config_repository,
         file_helper=file_helper,
         json_helper=json_helper,
@@ -286,6 +301,8 @@ def test_get_mock_response_using_response_file_path():
         ),
     )
 
+    template_service = mock.MagicMock(spec=services.TemplateService)
+
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
     mat_config_repository.query_route_config.return_value = route_config
 
@@ -297,6 +314,7 @@ def test_get_mock_response_using_response_file_path():
     json_helper = mock.MagicMock(spec=helpers.JSONHelperBase)
 
     uc = GetMockResponseUseCase(
+        template_service=template_service,
         mat_config_repository=mat_config_repository,
         file_helper=file_helper,
         json_helper=json_helper,

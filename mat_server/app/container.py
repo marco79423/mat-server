@@ -12,7 +12,7 @@ from dependency_injector import containers, providers
 from mat_server.app.cli import create_cli
 from mat_server.app.manager import Manager
 from mat_server.app.server import Server
-from mat_server.domain import use_cases
+from mat_server.domain import use_cases, services
 from mat_server.infrastructure import helpers, repositories
 
 
@@ -50,6 +50,10 @@ class DomainContainer(containers.DeclarativeContainer):
         data_retriever_helper=DataRetrieverHelper,
     )
 
+    TemplateService = providers.Singleton(
+        services.TemplateService
+    )
+
     CheckConfigUseCase = providers.Singleton(
         use_cases.CheckConfigUseCase,
         mat_config_repository=MatConfigRepository,
@@ -73,6 +77,7 @@ class DomainContainer(containers.DeclarativeContainer):
 
     GetMockResponseUseCase = providers.Singleton(
         use_cases.GetMockResponseUseCase,
+        template_service=TemplateService,
         mat_config_repository=MatConfigRepository,
         file_helper=FileHelper,
         json_helper=JSONHelper,

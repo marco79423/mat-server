@@ -1,15 +1,14 @@
-import uuid
-from typing import List
-
-from mat_server.domain import base_types, entities, repositories, exceptions, helpers
+from mat_server.domain import base_types, entities, repositories, exceptions, helpers, services
 
 
 class GetMockResponseUseCase(base_types.UseCase):
 
     def __init__(self,
+                 template_service: services.TemplateService,
                  mat_config_repository: repositories.MatConfigRepositoryBase,
                  file_helper: helpers.FileHelperBase,
                  json_helper: helpers.JSONHelperBase):
+        self._template_service = template_service
         self._mat_config_repository = mat_config_repository
         self._file_helper = file_helper
         self._json_helper = json_helper
@@ -40,7 +39,7 @@ class GetMockResponseUseCase(base_types.UseCase):
                 data = response_config.data
 
             if response_config.replace_funcs:
-                data = self._transform_data(data, response_config.replace_funcs)
+                data = self._template_service.substitute(data, response_config.replace_funcs)
 
             return entities.ServerResponse(
                 raw_body=data.encode(),
@@ -61,7 +60,7 @@ class GetMockResponseUseCase(base_types.UseCase):
 
             if response_config.replace_funcs:
                 data = raw_body.decode()
-                raw_body = self._transform_data(data, response_config.replace_funcs).encode()
+                raw_body = self._template_service.substitute(data, response_config.replace_funcs).encode()
 
             return entities.ServerResponse(
                 raw_body=raw_body,
@@ -95,15 +94,3 @@ class GetMockResponseUseCase(base_types.UseCase):
             return file_type
         else:  # pragma: no cover
             raise exceptions.ValidationError('資訊不足，無法猜測資料型態')
-
-    def _transform_data(self, data: str, replace_funcs: List) -> str:
-        for replace_func in replace_funcs:
-            if replace_func == 'uuid_v4':
-                data = self._transform_for_uuid_v4_replace_func(data)
-        return data
-
-    @staticmethod
-    def _transform_for_uuid_v4_replace_func(data: str) -> str:
-        for _ in range(data.count('{uuid_v4}')):
-            data = data.replace('{uuid_v4}', str(uuid.uuid4()), 1)
-        return data
