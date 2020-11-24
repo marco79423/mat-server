@@ -88,11 +88,12 @@ routes:
   - listen_path: backend/api/articles/
     response:
       replace_funcs:
-        - uuid_v4                          # 看見 {uuid_v4} 就會取代為 UUID v4 回傳
+        - uuid_v4                          # 看見 {uuid_v4()} 就會取代為 UUID v4 回傳
+        - random_int                       # 看見 {random_int(start, end) 就會用亂數取代
       data:
         - requestID: {uuid_v4()}
           title: Hello mat-server
-          content: 歡迎使用 mat-server
+          content: 歡迎使用 mat-server (目前在線人數 {random_int(100, 1000)})
 ```
 
 ##  進階用法
