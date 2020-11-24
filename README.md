@@ -90,7 +90,7 @@ routes:
       replace_funcs:
         - uuid_v4                          # 看見 {uuid_v4} 就會取代為 UUID v4 回傳
       data:
-        - requestID: {uuid_v4}
+        - requestID: {uuid_v4()}
           title: Hello mat-server
           content: 歡迎使用 mat-server
 ```

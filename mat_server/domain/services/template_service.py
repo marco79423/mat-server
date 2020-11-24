@@ -14,6 +14,6 @@ class TemplateService(base_types.Service):
 
     @staticmethod
     def _transform_for_uuid_v4_replace_func(data: str) -> str:
-        for _ in range(data.count('{uuid_v4}')):
-            data = data.replace('{uuid_v4}', str(uuid.uuid4()), 1)
+        for _ in range(data.count('{uuid_v4()}')):
+            data = data.replace('{uuid_v4()}', str(uuid.uuid4()), 1)
         return data
