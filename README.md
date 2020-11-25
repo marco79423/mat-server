@@ -54,17 +54,17 @@ mat-server 會直接使用當前目錄下的 `mat-data/config.yml` 設定檔，�
 server:
   proxy_url: http://target_server  # 要代理的伺服器
 routes:
-  - listen_path: hello   # 要攔截的路由  (http://target_server/hello)
-    method: GET          # HTTP Method  (預設為 GET)
-    status_code: 200     # 回傳的 status code (預設為 200 OK)
-    response:            # 回傳值設定 
+  - listen_path: "hello/{name}"   # 要攔截的路由  (http://target_server/hello)
+    method: GET                   # HTTP Method  (預設為 GET)
+    status_code: 200              # 回傳的 status code (預設為 200 OK)
+    response:                     # 回傳值設定 
       data:
-        msg: hello world # 回傳 {"msg": "hello world"}
+        msg: hello world          # 回傳 {"msg": "hello world"}
   - listen_path: hello
-    query:               # 設定 query string (http://target_server/hello?name=marco
+    query:                        # 設定 query string (http://target_server/hello?name=marco
       name: marco
     response:
-      file_path: data/hello.json # 回傳 hello.json 的檔案內容
+      file_path: data/hello.json  # 回傳 hello.json 的檔案內容
 ```
 
 範例： 直接透過 config.yml 設定路由和回傳值
