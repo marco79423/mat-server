@@ -14,6 +14,7 @@
 
 * 隨時可以修改設定，自動更新回傳值內容
 * 支援 query string
+* 支援取代函式
 
 ## 安裝
 
@@ -66,7 +67,7 @@ routes:
       file_path: data/hello.json # 回傳 hello.json 的檔案內容
 ```
 
-範例 1： 直接透過 config.yml 設定路由和回傳值
+範例： 直接透過 config.yml 設定路由和回傳值
 
 ```yaml
 server:
@@ -79,7 +80,18 @@ routes:
           content: 歡迎使用 mat-server
 ```
 
-範例 2： 自動取代變數
+##  進階用法
+
+### 取代函式
+
+可以使用 replace_funcs 取代值。
+
+目前可以支援的 replace_funcs：
+
+| 函式 | 名稱 | 說明 |
+|-|-|-|
+| uuid_v4 | UUID v4 | 用 UUID v4 取代 |
+| random_int | 亂數 | 用亂數整數取代 |
 
 ```yaml
 server:
@@ -95,8 +107,6 @@ routes:
           title: Hello mat-server
           content: 歡迎使用 mat-server (目前在線人數 {random_int(100, 1000)})
 ```
-
-##  進階用法
 
 ### 當作函式庫使用
 
