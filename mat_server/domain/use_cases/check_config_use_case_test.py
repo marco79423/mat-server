@@ -4,9 +4,14 @@ from mat_server.domain import repositories, entities
 from mat_server.domain.use_cases.check_config_use_case import CheckConfigUseCase
 
 
-def test_check_config_without_proxy_host_setting():
+def test_check_config_without_proxy_url_and_route_setting():
     mat_config_repository = mock.MagicMock(spec=repositories.MatConfigRepositoryBase)
-    mat_config_repository.get_proxy_host.return_value = None
+    mat_config_repository.get_config.return_value = entities.MatConfig(
+        server=entities.ServerConfig(
+            proxy_url=None,
+        ),
+        routes=[],
+    )
 
     uc = CheckConfigUseCase(
         mat_config_repository=mat_config_repository,
@@ -14,7 +19,7 @@ def test_check_config_without_proxy_host_setting():
 
     assert uc.execute() == entities.ValidationReport(
         failed_reasons=[
-            '必須要有 proxy host 設定',
+            '必須要有 proxy url 或 mock 路由設定',
         ]
     )
 

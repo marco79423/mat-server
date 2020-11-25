@@ -10,6 +10,7 @@ class Server:
     def __init__(self,
                  get_config_use_case: use_cases.GetConfigUseCase,
                  check_if_mock_response_exists_use_case: use_cases.CheckIfMockResponseExistsUseCase,
+                 check_if_proxy_server_exists_use_case: use_cases.CheckIfProxyServerExistsUseCase,
                  get_mock_response_use_case: use_cases.GetMockResponseUseCase,
                  get_proxy_server_response_use_case: use_cases.GetProxyServerResponseUseCase,
                  server_serve_func: Callable,
@@ -17,6 +18,7 @@ class Server:
 
         self._get_config_use_case = get_config_use_case
         self._check_if_mock_response_exists_use_case = check_if_mock_response_exists_use_case
+        self._check_if_proxy_server_exists_use_case = check_if_proxy_server_exists_use_case
         self._get_mock_response_use_case = get_mock_response_use_case
         self._get_proxy_server_response_use_case = get_proxy_server_response_use_case
 
@@ -54,6 +56,11 @@ class Server:
             if existed:
                 mock_response = self._get_mock_response_use_case.execute(client_request)
                 return transform_response_to_fastapi_response(mock_response)
+
+            # 檢查是否有 Proxy Server
+            existed = self._check_if_proxy_server_exists_use_case.execute()
+            if not existed:
+                raise fastapi.HTTPException(status_code=404)
 
             # 如果不需要 mock，直接轉給 proxy server
             else:

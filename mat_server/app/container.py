@@ -70,6 +70,11 @@ class DomainContainer(containers.DeclarativeContainer):
         mat_config_repository=MatConfigRepository,
     )
 
+    CheckIfProxyServerExistsUseCase = providers.Singleton(
+        use_cases.CheckIfProxyServerExistsUseCase,
+        mat_config_repository=MatConfigRepository,
+    )
+
     GetConfigUseCase = providers.Singleton(
         use_cases.GetConfigUseCase,
         mat_config_repository=MatConfigRepository,
@@ -97,6 +102,7 @@ class AppContainer(containers.DeclarativeContainer):
         Server,
         get_config_use_case=DomainContainer.GetConfigUseCase,
         check_if_mock_response_exists_use_case=DomainContainer.CheckIfMockResponseExistsUseCase,
+        check_if_proxy_server_exists_use_case=DomainContainer.CheckIfProxyServerExistsUseCase,
         get_mock_response_use_case=DomainContainer.GetMockResponseUseCase,
         get_proxy_server_response_use_case=DomainContainer.GetProxyServerResponseUseCase,
         server_serve_func=uvicorn.run,

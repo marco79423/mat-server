@@ -10,8 +10,8 @@ class CheckConfigUseCase(base_types.UseCase):
     def execute(self) -> entities.ValidationReport:
         validation_report = entities.ValidationReport()
 
-        # 必須要有 proxy host 設定
-        if self._mat_config_repository.get_proxy_host() is None:
-            validation_report.add_failed_reason('必須要有 proxy host 設定')
+        mat_config = self._mat_config_repository.get_config()
+        if not mat_config.server.proxy_url and not mat_config.routes:
+            validation_report.add_failed_reason('必須要有 proxy url 或 mock 路由設定')
 
         return validation_report
