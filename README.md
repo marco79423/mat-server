@@ -54,7 +54,7 @@ mat-server 會直接使用當前目錄下的 `mat-data/config.yml` 設定檔，�
 server:
   proxy_url: http://target_server  # 要代理的伺服器
 routes:
-  - listen_path: "hello/{name}"   # 要攔截的路由  (http://target_server/hello)
+  - listen_path: "hello/name"   # 要攔截的路由  (http://target_server/hello)
     method: GET                   # HTTP Method  (預設為 GET)
     status_code: 200              # 回傳的 status code (預設為 200 OK)
     response:                     # 回傳值設定 
@@ -82,6 +82,23 @@ routes:
 
 ##  進階用法
 
+### 參數化 listen_path
+
+listen_path 是使用正規表達式 (regex) 判斷是否符合，所以碰到需要無視參數內容時可以使用。
+
+範例： 使用 regex 設定 listen_path
+
+```yaml
+server:
+  proxy_url: https://marco79423.net
+routes:
+  - listen_path: "backend/api/articles/\\d+"
+    response:
+      data:
+        title: Hello mat-server
+        content: 歡迎使用 mat-server
+```
+
 ### 取代函式
 
 可以使用 replace_funcs 取代值。
@@ -92,6 +109,8 @@ routes:
 |-|-|-|
 | uuid_v4 | UUID v4 | 用 UUID v4 取代 |
 | random_int | 亂數 | 用亂數整數取代 |
+
+範例： 使用函式函式設定 config.yml
 
 ```yaml
 server:

@@ -1,3 +1,4 @@
+import re
 from typing import Optional
 
 from mat_server.domain import repositories, entities, helpers
@@ -31,7 +32,8 @@ class MatConfigRepository(repositories.MatConfigRepositoryBase):
                            query_string: str) -> Optional[entities.RouteConfig]:
         route_configs = self.get_all_route_configs()
         for route_config in route_configs:
-            if route_config.listen_path != path:
+            pattern = route_config.listen_path + '$'
+            if not re.match(pattern, path):
                 continue
 
             if route_config.method != method:
@@ -54,8 +56,12 @@ class MatConfigRepository(repositories.MatConfigRepositoryBase):
                     if isinstance(values, str):
                         query[key] = [values]
 
+            listen_path = self._data_retriever_helper.get_value(route, '.listen_path')
+            if listen_path is not None and listen_path.startswith('/'):
+                listen_path = listen_path[1:]
+
             route_configs.append(entities.RouteConfig(
-                listen_path=self._data_retriever_helper.get_value(route, '.listen_path'),
+                listen_path=listen_path,
                 method=self._data_retriever_helper.get_value(route, '.method', 'GET'),
                 status_code=self._data_retriever_helper.get_value(route, '.status_code', 200),
                 query=query,
