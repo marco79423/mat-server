@@ -39,7 +39,15 @@ class Server:
             mat_config = self._get_config_use_case.execute()
             return mat_config.serialize()
 
-        @api_router.api_route('/{path:path}')
+        available_proxy_methods = [
+            'GET',
+            'POST',
+            'DELETE',
+            'PUT',
+            'PATCH',
+        ]
+
+        @api_router.api_route('/{path:path}', methods=available_proxy_methods)
         async def proxy(path, request: fastapi.Request):
             client_request = entities.ClientRequest(
                 method=request.method,
